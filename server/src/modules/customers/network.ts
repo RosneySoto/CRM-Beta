@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import controllerError  from '../../middleware/controllerError';
-import { addCustomer, updateCustomer, deleteCustomerPartial, getAll, getAllActive } from './controller';
+import { addCustomer, updateCustomer, deleteCustomerPartial, getAll, getAllActive, getByName } from './controller';
 import { authenticate, authorize } from '../../middleware/auth';
 import { CustomRequest } from '../../types/Users'
 import { UserRole } from '../../types/Roles'
@@ -115,6 +115,26 @@ router.get('/all', authenticate, async (req: CustomRequest, res: Response, next:
          console.log(e);
          res.status(500).send('Unexpected Error');
       });
-})
+});
+
+router.get('/name', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
+   console.log(req.body);
+   
+   getByName(req.body.name)
+      .then((data) => {
+         switch(data.status){
+            case 200:
+               res.status(200).send(data.message);
+               break;
+            case 400:
+               res.status(data.status).send(data.message);
+               break;
+         }
+      })
+      .catch((e) => {
+         console.log(e);
+         res.status(500).send('Unexpected Error');
+      });
+});
 
 export default router;

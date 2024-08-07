@@ -107,3 +107,29 @@ export async function getAllActive() {
       };
    };
 };
+
+export async function getByName(name: string) {
+   try {
+      const regex = new RegExp(`^${name}`, 'i');
+      const users = await Customers.find({ name: regex });
+      console.log('**** ' + users + '******');
+      
+      
+      // Verificar si se encontraron usuarios
+      if (users.length === 0) throw new Error('User not found');
+      
+      console.log(users);
+      return {
+         status: 200,
+         message: users
+      };
+   } catch (e) {
+      console.log("[ERROR] -> getByName", e);
+      return {
+         status: 400,
+         message: "An error occurred while getting customers by name",
+         detail: e,
+      };
+   }
+};
+

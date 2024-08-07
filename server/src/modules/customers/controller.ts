@@ -2,7 +2,8 @@ import { addCustomer as _addCustomer,
    findCustomerId as _findCustomerById,
    deleteCustomer as _deleteCustomer,
    getAll as _getAll,
-   getAllActive as _getAllActive
+   getAllActive as _getAllActive,
+   getByName as _getByName
 } from './store';
 import { CustomerType } from '../../types/Customer';
 import Customers from './model';
@@ -121,6 +122,29 @@ export async function getAllActive() {
             message: 'No customers founds'
          };
       }
+      return result;
+   } catch (error) {
+      console.log(error);
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   };
+};
+
+export async function getByName(name: string) {
+   try {
+      const result = await _getByName(name);
+      console.log('CONTROLLER -> ' + result);
+      
+      
+      if(!result){
+         return {
+            status: 404,
+            message: 'User no found'
+         };
+      };
       return result;
    } catch (error) {
       console.log(error);
