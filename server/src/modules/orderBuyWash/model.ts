@@ -4,14 +4,17 @@ const Schema = mongoose.Schema;
 
 const orderBuy = new Schema({
    nameService: {
-
-   },
-   price: {
-
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Products',
+      required: true,
    },
    customerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Customers',
+      require: true
+   },
+   vehicleId: {
+      type: mongoose.Schema.Types.ObjectId,
       require: true
    },
    createUserId: {
