@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: API Usuarios
+  version: 1.0.0
+  description: Documentación de los endpoints del módulo de usuarios
+
+paths:
+  /users:
+    post:
+      tags:
+        - Usuarios # ---- SECCION DE USUARIOS ---- #
+      summary: Crear un nuevo usuario
+      description: Este endpoint permite crear un nuevo usuario en la aplicación. Solo los usuarios con el rol de administrador pueden realizar esta acción.
+      security:
+        - bearerAuth: [] # Autenticación mediante token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nombre del usuario
+                  example: Juan
+                lastname:
+                  type: string
+                  description: Apellido del usuario
+                  example: Pérez
+                image:
+                  type: string
+                  description: URL de la imagen del usuario
+                  example: https://example.com/image.jpg
+                email:
+                  type: string
+                  description: Correo electrónico del usuario
+                  example: juan.perez@example.com
+                password:
+                  type: string
+                  description: Contraseña del usuario
+                  example: Password123!
+                roleId:
+                  type: string
+                  description: ID del rol asignado al usuario
+                  example: 64e2d99e4d123abc56789ef0
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID único del usuario creado
+                        example: 64e2d99e4d123abc56789ef1
+                      name:
+                        type: string
+                        description: Nombre del usuario
+                        example: Juan
+                      lastname:
+                        type: string
+                        description: Apellido del usuario
+                        example: Pérez
+                      email:
+                        type: string
+                        description: Correo electrónico del usuario
+                        example: juan.perez@example.com
+                      roleId:
+                        type: string
+                        description: ID del rol asignado al usuario
+                        example: 64e2d99e4d123abc56789ef0
+        '400':
+          description: Error en la solicitud (faltan datos o son inválidos)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    description: Descripción del error
+                    example: "Password is required"
+        '401':
+          description: Usuario ya existe o no tiene permisos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    description: Descripción del error
+                    example: "User already exists"
+        '500':
+          description: Error inesperado en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    description: Descripción del error
+                    example: "Unexpected Controller Error"
+                  detail:
+                    type: string
+                    description: Detalles técnicos del error
+                    example: "Database connection failed"

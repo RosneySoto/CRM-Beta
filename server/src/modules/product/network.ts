@@ -5,6 +5,7 @@ import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 const router = express.Router();
 
+//Crea un nuevo producto
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
    addProduct(req.body)
       .then((data) =>{
@@ -26,6 +27,7 @@ router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async
       });
 });
 
+//Mostrar un producto por ID
 router.get('/:id', authenticate, authorize([UserRole.Admin, UserRole.User
 ]), async (req: Request, res: Response, next: NextFunction) => {
    findProductById(req.params.id)
@@ -48,6 +50,7 @@ router.get('/:id', authenticate, authorize([UserRole.Admin, UserRole.User
    });
 });
 
+//Edita un producto por ID
 router.put('/update', authenticate, async (req: Request, res: Response, next: NextFunction) => {
    const idProduct = req.body.id;
    const productData = req.body;
@@ -66,6 +69,7 @@ router.put('/update', authenticate, async (req: Request, res: Response, next: Ne
    });
 });
 
+//Elimina un producto de manera pasiva pro ID
 router.delete('/:id', authenticate, authorize([UserRole.Admin]), async (req: Request, res: Response, next: NextFunction) => {
    deleteProduct(req.params.id)
       .then((data) => {

@@ -10,52 +10,52 @@ import Users from './model';
 import Roles from '../roles/model';
 import { RoleType, UserRole } from '../../types/Roles';
 
-export async function addUser(data: UserType) {
-   try {
-      const { name, lastname, image, email, password, roleId } = data;
+   export async function addUser(data: UserType) {
+      try {
+         const { name, lastname, image, email, password, roleId } = data;
 
-      const existingUser = await Users.findOne({ email });
-      if (existingUser) {
-         return {
-            status: 401,
-            message: 'User already exists',
+         const existingUser = await Users.findOne({ email });
+         if (existingUser) {
+            return {
+               status: 401,
+               message: 'User already exists',
+            };
          };
-      };
 
-      let passwordHash: string | undefined;
-      if (password && password.trim() !== '') {
-         passwordHash = await encrypt(password);
-      } else {
-         return {
-            status: 400,
-            message: 'Password is required',
+         let passwordHash: string | undefined;
+         if (password && password.trim() !== '') {
+            passwordHash = await encrypt(password);
+         } else {
+            return {
+               status: 400,
+               message: 'Password is required',
+            };
          };
-      };
 
-      // Crear nuevo usuario con el ID del rol 'Admin'
-      const newUser = new Users({
-         name,
-         lastname,
-         image,
-         email,
-         password: passwordHash,
-         roleId,
-      });
+         // Crear nuevo usuario con el ID del rol 'Admin'
+         const newUser = new Users({
+            name,
+            lastname,
+            image,
+            email,
+            password: passwordHash,
+            roleId,
+         });
 
-      const result = await newUser.save();
-      return {
-         status: 201,
-         message: result,
-      };
-   } catch (error) {
-      console.error('Unexpected Controller Error:', error);
-      return {
-         status: 500,
-         message: 'Unexpected Controller Error',
-         detail: error,
+         const result = await newUser.save();
+         return {
+            status: 201,
+            message: result,
+         };
+      } catch (error) {
+         console.error('Unexpected Controller Error:', error);
+         return {
+            status: 500,
+            message: 'Unexpected Controller Error',
+            detail: error,
+         };
       };
    };
-};
 
 export async function loginUser(email: string, password: string) {
    try {

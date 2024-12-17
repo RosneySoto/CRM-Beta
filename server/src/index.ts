@@ -5,11 +5,17 @@ import routes from './config/routes';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import swaggerUI from 'swagger-ui-express';
+import swaggerSetup from './config/swagger'
 
 const app = express();
 app.use(express.json());
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSetup));
 
-app.use(cors());
+app.use(cors({
+   origin: 'http://localhost:5173',
+   credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));

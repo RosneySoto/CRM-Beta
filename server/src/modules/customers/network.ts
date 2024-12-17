@@ -6,6 +6,7 @@ import { CustomRequest } from '../../types/Users'
 import { UserRole } from '../../types/Roles'
 const router = express.Router();
 
+//Crea un nuevo cliente
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
    addCustomer(req.body)
       .then((data) =>{
@@ -27,6 +28,7 @@ router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async
       });
 });
 
+//Edita un cliente por ID
 router.put('/edit/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
    const userId = req.user?.id;
 
@@ -63,6 +65,7 @@ router.put('/edit/:id', authenticate, authorize([UserRole.Admin, UserRole.User])
       });
 });
 
+//Elimina de manera pasiva un cliente
 router.delete('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) =>{
    deleteCustomerPartial(req.params.id)
       .then((data) => {
@@ -81,6 +84,7 @@ router.delete('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), 
       });
 });
 
+// Muestra todos los clientes
 router.get('/', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    getAll()
       .then((data) => {
@@ -99,6 +103,7 @@ router.get('/', authenticate, async (req: CustomRequest, res: Response, next: Ne
       });
 });
 
+//Lista todos los clientes
 router.get('/all', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    getAllActive()
       .then((data) => {
@@ -117,6 +122,7 @@ router.get('/all', authenticate, async (req: CustomRequest, res: Response, next:
       });
 });
 
+//Endoint para buscar por nombre de 
 router.get('/name', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    console.log(req.body);
    

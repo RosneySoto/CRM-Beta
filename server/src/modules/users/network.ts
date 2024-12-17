@@ -7,6 +7,7 @@ import { authorize } from '../../middleware/auth';
 import { UserRole } from '../../types/Roles';
 const router = express.Router();
 
+//Crea un usuario nuevo
 router.post('/', authenticate, authorize([UserRole.Admin]), function(req, res) { ///// Falta autenticación   
    addUser(req.body)   
       .then((data) => {
@@ -28,6 +29,7 @@ router.post('/', authenticate, authorize([UserRole.Admin]), function(req, res) {
       });
 });
 
+//Logeo de usuario
 router.post('/login', async (req: CustomRequest, res: Response, next: NextFunction) => {
    const { email, password } = req.body;
 
@@ -51,6 +53,7 @@ router.post('/login', async (req: CustomRequest, res: Response, next: NextFuncti
    });
 });
 
+//Edita un usuario
 router.put('/update', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    const userId = req.user?.id;
    const userData = req.body;
@@ -71,6 +74,7 @@ router.put('/update', authenticate, async (req: CustomRequest, res: Response, ne
    });
 });
 
+//Elimina de manera pasiva un cliente
 router.delete('/:id', authenticate, authorize([UserRole.Admin]), async (req: CustomRequest, res: Response, next: NextFunction) => {
    deleteUserPartial(req.params.id)
       .then((resp) => {

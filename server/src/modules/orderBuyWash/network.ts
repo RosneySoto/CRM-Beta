@@ -5,6 +5,7 @@ import { UserRole } from "../../types/Roles";
 import { addOrder, getAllOrders } from './controller';
 const router = express.Router();
 
+//Crea una orden de compra
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
    addOrder(req.body)
       .then((data) => {
@@ -26,6 +27,7 @@ router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async
       });
 });
 
+//Muestra todas las ordenes de compra
 router.get('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
    getAllOrders()
       .then((data) => {
