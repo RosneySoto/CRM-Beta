@@ -2,13 +2,15 @@ import { addUser as _addUser,
    userFindEmail as _userFindEmail,
    login as _login, 
    updateUser as _updateUser,
-   deleteUser as _deleteUser
+   deleteUser as _deleteUser,
+   logout as _logout
 } from './store';
 import { UserType } from '../../types/Users';
 import { compare, encrypt } from '../../middleware/bcrypt';
 import Users from './model';
 import Roles from '../roles/model';
 import { RoleType, UserRole } from '../../types/Roles';
+import { Response } from 'express';
 
    export async function addUser(data: UserType) {
       try {
@@ -115,3 +117,17 @@ export async function deleteUserPartial(id: string) {
       };
    };
 };
+
+export async function logoutUser(res: Response) {
+   try {
+      const result = await _logout(res);
+      return result;
+   } catch (error) {
+      console.log(error);
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   }
+}

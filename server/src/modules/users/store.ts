@@ -1,6 +1,7 @@
 import Users from './model';
 import { UserType, LoginResponse } from '../../types/Users';
 import { compare, encrypt } from '../../middleware/bcrypt';
+import { Response } from 'express';
 
 export async function addUser(data: UserType) {
    try {
@@ -146,3 +147,20 @@ export async function deleteUser(id: string) {
       };
    };
 };
+
+export async function logout(res: Response) {
+   try {
+      res.clearCookie('token');
+      return {
+         status: 200,
+         message: 'Logout successful'
+      };
+   } catch (e) {
+      console.log("[ERROR] -> logout", e);
+      return {
+         status: 400,
+         message: "An error occurred during logout",
+         detail: e,
+      };
+   }
+}
