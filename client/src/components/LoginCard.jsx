@@ -1,21 +1,24 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function LoginCard({ onSubmit }) {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
+   const navigate = useNavigate(); // Hook para redirección
 
    const handleSubmit = (e) => {
       e.preventDefault();
       onSubmit({ email, password });
+
+      // Redirigir al dashboard con el Sidebar
+      navigate('/ ');
    };
 
    return (
       <form onSubmit={handleSubmit} className="w-100">
-
          <div className="form-group" style={{ paddingBottom: '20px' }}>
-            <label htmlFor="exampleInputEmail1">Correo Electronico</label>
+            <label htmlFor="exampleInputEmail1">Correo Electrónico</label>
             <input
                type="email"
                className="form-control"
@@ -38,8 +41,8 @@ export default function LoginCard({ onSubmit }) {
                onChange={(e) => setPassword(e.target.value)}
             />
          </div>
-         <button type="submit" className="btn btn-primary w-100">Iniciar Sesion</button>
+         <button type="submit" className="btn btn-primary w-100">Iniciar Sesión</button>
          <Link to="/register">Quiero registrarme</Link>
       </form>
    );
-};
+}
