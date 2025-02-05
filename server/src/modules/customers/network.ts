@@ -6,6 +6,15 @@ import { CustomRequest } from '../../types/Users'
 import { UserRole } from '../../types/Roles'
 const router = express.Router();
 
+//Endpoint para conectar el front con el back
+router.get('/view-add', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
+   try {
+      res.status(200).send('Connected to api');
+   } catch (error) {
+      res.status(400).send('Error =>')
+   }
+});
+
 //Crea un nuevo cliente
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
    addCustomer(req.body)
@@ -103,7 +112,7 @@ router.get('/', authenticate, async (req: CustomRequest, res: Response, next: Ne
       });
 });
 
-//Lista todos los clientes
+//Lista todos los clientes activos
 router.get('/all', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    getAllActive()
       .then((data) => {
