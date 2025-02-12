@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import Swal from 'sweetalert2';
+import React from 'react';
+import OrderBuyPage from '../pages/OrderBuyPage';
+
+function OrderPage() {
+   return (
+      <div className="container">
+         <h1>Orders Buys</h1>
+         <OrderBuyPage />
+      </div>
+   );
+}
+
+export default OrderPage;

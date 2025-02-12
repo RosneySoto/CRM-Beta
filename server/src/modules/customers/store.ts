@@ -91,6 +91,7 @@ export async function getAll() {
 export async function getAllActive() {
    try {
       const allcustomer = await Customers.find({ active: true });
+      
          
       if (!allcustomer) throw new Error('No active customers found');
 

@@ -1,0 +1,71 @@
+/* Estilos generales */
+.create-customer-btn {
+   margin-bottom: 20px;
+   padding: 10px 15px;
+   background-color: #007BFF;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+}
+
+.create-customer-btn:hover {
+   background-color: #0056b3;
+}
+
+.customer-table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-top: 20px;
+}
+
+.customer-table th, .customer-table td {
+   padding: 12px;
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+}
+
+.customer-table th {
+   background-color: #f8f9fa;
+}
+
+.customer-table tr:hover {
+   background-color: #f1f1f1;
+}
+
+.customer-table button {
+   padding: 6px 12px;
+   /* background-color: ; */
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   margin-right: 10px;
+}
+
+.customer-table button:hover {
+   background-color: #e0a800;
+}
+
+.customer-table button:active {
+   background-color: #d39e00;
+}
+
+.customer-table .edit-btn {
+   background-color: #28a745;
+}
+
+.customer-table .edit-btn:hover {
+   background-color: #218838;
+}
+
+.customer-table .delete-btn {
+   background-color: #dc3545;
+}
+
+.customer-table .delete-btn:hover {
+   background-color: #c82333;
+}
+
+.customer-table td {
+   text-align: center;
+}

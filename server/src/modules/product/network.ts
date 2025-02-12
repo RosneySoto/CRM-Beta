@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction} from "express";
 import controllerError from '../../middleware/controllerError';
-import { addProduct, findProductById, updateProduct, deleteProduct } from './controller';
+import { addProduct, findProductById, updateProduct, deleteProduct, getAllProducts } from './controller';
 import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 const router = express.Router();
@@ -78,6 +78,25 @@ router.delete('/:id', authenticate, authorize([UserRole.Admin]), async (req: Req
                res.status(200).send(`Customer ${req.params.id} deleted`);
                break;
             case 400:
+               res.status(data.status).send(data.message);
+               break;
+         }
+      })
+      .catch((e) => {
+         console.log(e);
+         res.status(500).send('Unexpected Error');
+      });
+});
+
+router.get('/', authenticate, authorize([UserRole.Admin, UserRole.User
+]), async (req: Request, res: Response, next: NextFunction) => {
+   getAllProducts()
+      .then((data) => {
+         switch(data.status){
+            case 200:
+               res.status(200).send(data);
+               break;
+            case 404:
                res.status(data.status).send(data.message);
                break;
          }

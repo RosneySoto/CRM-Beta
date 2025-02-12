@@ -38,7 +38,7 @@ export async function findProductById(id: string) {
       console.log("[ERROR] -> findProductById", error);
       return {
          status: 400,
-         message: "An error occurred while updating the product",
+         message: "An error occurred while updating the productsssss",
          detail: error
       };
    };
@@ -99,4 +99,26 @@ export async function deleteProduct(id: string) {
          detail: e,
       };
    };
+};
+
+export async function getAllProductsStore() {
+   try {
+      const products = await Products.find();
+      
+      if (!products) throw new Error('No products found');  
+
+      console.log('LISTA DE PRODUCTOS ', products);
+      
+      return {
+         status: 200,
+         message: 'Success',
+         data: products,
+      };
+   } catch (error) {
+      return {
+         status: 400,
+         message: 'An error occurred while getting all products',
+         detail: error,
+      };
+   }
 };

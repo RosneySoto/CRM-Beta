@@ -46,26 +46,63 @@ import { OrderBuyType } from '../../types/orderBuy';
 //    }
 // }
 
+// export async function addOrder(orderData: OrderBuyType) {
+//    try {
+//       // Primero, verifica si el cliente existe
+//       const customer = await Customer.findById(orderData.customerId);
+//       if (!customer) {
+//          throw new Error('Customer not found');
+//       }
+
+//       // Verifica si el vehículo pertenece al cliente
+//       const vehicleExists = customer.vehicles.some(vehicle => vehicle.id.toString() === orderData.vehicleId);
+//       if (!vehicleExists) {
+//          throw new Error('Vehicle not found for this customer');
+//       }
+
+//       // Crea la orden de compra
+//       const newOrder = new OrderBuy({
+//          nameService: orderData.nameService,
+//          customerId: orderData.customerId,
+//          vehicleId: orderData.vehicleId,
+//          createUserId: orderData.createUserId,
+//       });
+
+//       await newOrder.save();
+
+//       return {
+//          status: 201,
+//          message: 'Order created successfully',
+//          data: newOrder,
+//       };
+//    } catch (error) {
+//       return {
+//          status: 400,
+//          message: error,
+//       };
+//    }
+// }
+
+// store.ts
 export async function addOrder(orderData: OrderBuyType) {
    try {
-      // Primero, verifica si el cliente existe
+      // Verifica la existencia del cliente y el vehículo
       const customer = await Customer.findById(orderData.customerId);
       if (!customer) {
          throw new Error('Customer not found');
       }
 
-      // Verifica si el vehículo pertenece al cliente
       const vehicleExists = customer.vehicles.some(vehicle => vehicle.id.toString() === orderData.vehicleId);
       if (!vehicleExists) {
          throw new Error('Vehicle not found for this customer');
       }
 
-      // Crea la orden de compra
+      // Crea la nueva orden
       const newOrder = new OrderBuy({
          nameService: orderData.nameService,
          customerId: orderData.customerId,
          vehicleId: orderData.vehicleId,
-         createUserId: orderData.createUserId,
+         createUserId: orderData.createUserId, // Guarda el ID del usuario que crea la orden
       });
 
       await newOrder.save();
@@ -81,7 +118,7 @@ export async function addOrder(orderData: OrderBuyType) {
          message: error,
       };
    }
-}
+};
 
 export async function getAllOrders() {
    try {
@@ -127,4 +164,4 @@ export async function getAllOrders() {
          detail: e,
       };
    }
-}
+};

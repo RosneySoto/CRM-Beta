@@ -1,5 +1,5 @@
 import { addOrder as _addOrder,
-         getAllOrders as _getAllOrders
+         getAllOrders as _getAllOrders,
  } from './store';
 import { OrderBuyType } from '../../types/orderBuy';
 import OrderBuy from './model';
@@ -46,4 +46,4 @@ export async function getAllOrders() {
          detail: error
       };
    }
-}
+};

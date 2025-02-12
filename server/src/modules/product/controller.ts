@@ -1,7 +1,8 @@
 import { addProduct as _addProduct,
          findProductById as _findProductById,
          updateProduct as _updateProduct,
-         deleteProduct as _deleteProduct
+         deleteProduct as _deleteProduct,
+         getAllProductsStore,
 } from './store';
 import { ProductType } from '../../types/Product';
 import Products from './model';
@@ -107,4 +108,23 @@ export async function deleteProduct(id: string) {
          detail: error,
       };
    };
+};
+
+export async function getAllProducts() {
+   try {
+      const result = await getAllProductsStore();
+      if(!result){
+         return {
+            status: 404,
+            message: 'No products found'
+         };
+      }
+      return result;
+   } catch (error) {
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   }
 };
