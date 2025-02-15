@@ -112,8 +112,9 @@ export async function getAllActive() {
 export async function getByName(name: string) {
    try {
       const regex = new RegExp(`^${name}`, 'i');
-      const users = await Customers.find({ name: regex });
-      console.log('**** ' + users + '******');
+      const users = await Customers.find({
+         $or: [{ name: regex }, { lastname: regex }] // Busca por nombre o apellido
+      });
       
       
       // Verificar si se encontraron usuarios
@@ -134,3 +135,26 @@ export async function getByName(name: string) {
    }
 };
 
+export async function getCustomerByEmail(email: string) {
+   try {
+      const regex = new RegExp(`^${email}`, 'i');
+      const user = await Customers.find({
+         $or: [{ email: regex }]
+      });
+
+      if (user.length === 0) throw new Error('User not found');
+      
+      console.log(user);
+      return {
+         status: 200,
+         message: user
+      };
+   } catch (e) {
+      console.log("[ERROR] -> getByName", e);
+      return {
+         status: 400,
+         message: "An error occurred while getting customers by name",
+         detail: e,
+      };
+   };
+};

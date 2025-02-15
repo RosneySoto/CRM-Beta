@@ -3,7 +3,8 @@ import { addCustomer as _addCustomer,
    deleteCustomer as _deleteCustomer,
    getAll as _getAll,
    getAllActive as _getAllActive,
-   getByName as _getByName
+   getByName as _getByName,
+   getCustomerByEmail as _getByEmail
 } from './store';
 import { CustomerType } from '../../types/Customer';
 import Customers from './model';
@@ -146,6 +147,28 @@ export async function getByName(name: string) {
          };
       };
       return result;
+   } catch (error) {
+      console.log(error);
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   };
+};
+
+export async function getByEmail(email: string) {
+   try {
+      const result = await _getByEmail(email);      
+      
+      if(!result){
+         return {
+            status: 404,
+            message: 'User no found'
+         };
+      };
+      return result;
+      
    } catch (error) {
       console.log(error);
       return {

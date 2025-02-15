@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import OrderModal from "../Modals/OrderBuyModal"; // Importamos el modal
+import OrderModal from "../Modals/CreateOrderBuyModal"; // Importamos el modal
 import "../styles/orderList.css";
 
 function OrderList() {
@@ -24,7 +24,6 @@ function OrderList() {
             withCredentials: true,
          });
 
-         console.log('***********', response.data);
          setOrders(response.data);
       } catch (err) {
          setError("Error fetching orders");
@@ -38,8 +37,8 @@ function OrderList() {
 
    return (
       <div className="order-container">
-         <h2>Orders</h2>
-         <button className="new-order-btn" onClick={() => setIsModalOpen(true)}>New Order</button> {/* Botón para abrir modal */}
+         <h2>Ordenes de Servicios</h2>
+         <button className="new-order-btn" onClick={() => setIsModalOpen(true)}>Crear una orden nueva</button> {/* Botón para abrir modal */}
 
          <table className="order-table">
             <thead>

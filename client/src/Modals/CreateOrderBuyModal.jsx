@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import '../styles/orderModal.css';
+import '../styles/createOrderBuyModal.css'
 
 function OrderModal({ isOpen, onClose, onOrderCreated }) {
    const [formData, setFormData] = useState({
@@ -60,13 +60,13 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
          setVehicles([]);
          return;
       }
-   
+
       const selectedCustomer = customers.find((customer) => customer._id === formData.customerId);
-   
+
       if (selectedCustomer) {
          console.log("Cliente seleccionado:", selectedCustomer);
          console.log("Vehículos asociados:", selectedCustomer.vehicles);
-   
+
          // Validar que `vehicles` es un array antes de actualizar el estado
          if (Array.isArray(selectedCustomer.vehicles)) {
             setVehicles(selectedCustomer.vehicles);
@@ -79,7 +79,7 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
          setVehicles([]);
       }
    }, [formData.customerId, customers]);
-   
+
 
    const handleChange = (e) => {
       const { name, value } = e.target;
@@ -139,46 +139,50 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
          <div className="modal-content">
             <h2>Create New Order</h2>
             <form onSubmit={handleSubmit}>
-               <label>
-                  Product:
-                  <select name="product" value={formData.product} onChange={handleProductChange} required>
-                     <option value="">Select a product</option>
-                     {products.map((product) => (
-                        <option key={product._id} value={product._id}>
-                           {product.product}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+               <div className="form-row">
+                  <label>
+                     Product:
+                     <select name="product" value={formData.product} onChange={handleProductChange} required>
+                        <option value="">Select a product</option>
+                        {products.map((product) => (
+                           <option key={product._id} value={product._id}>
+                              {product.product}
+                           </option>
+                        ))}
+                     </select>
+                  </label>
 
-               <label>
-                  Price:
-                  <input readOnly type="number" value={formData.price?.$numberDecimal || ''} />
-               </label>
+                  <label>
+                     Price:
+                     <input readOnly type="number" value={formData.price?.$numberDecimal || ''} />
+                  </label>
+               </div>
 
-               <label>
-                  Customer:
-                  <select name="customerId" value={formData.customerId} onChange={handleChange} required>
-                     <option value="">Select a customer</option>
-                     {customers.map((customer) => (
-                        <option key={customer._id} value={customer._id}>
-                           {customer.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+               <div className="form-row">
+                  <label>
+                     Customer:
+                     <select name="customerId" value={formData.customerId} onChange={handleChange} required>
+                        <option value="">Select a customer</option>
+                        {customers.map((customer) => (
+                           <option key={customer._id} value={customer._id}>
+                              {customer.name}
+                           </option>
+                        ))}
+                     </select>
+                  </label>
 
-               <label>
-                  Vehicle:
-                  <select name="vehicle" value={formData.vehicle} onChange={handleChange} required>
-                     <option value="">Select a vehicle</option>
-                     {vehicles.map((vehicle) => (
-                        <option key={vehicle._id} value={vehicle._id}>
-                           {vehicle.marca} {vehicle.modelo} ({vehicle.patente}){vehicle.model}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+                  <label>
+                     Vehicle:
+                     <select name="vehicle" value={formData.vehicle} onChange={handleChange} required>
+                        <option value="">Select a vehicle</option>
+                        {vehicles.map((vehicle) => (
+                           <option key={vehicle._id} value={vehicle._id}>
+                              {vehicle.marca} {vehicle.modelo} ({vehicle.patente}){vehicle.model}
+                           </option>
+                        ))}
+                     </select>
+                  </label>
+               </div>
 
                <div className="modal-actions">
                   <button type="submit">Create Order</button>
@@ -187,6 +191,7 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
                   </button>
                </div>
             </form>
+
          </div>
       </div>
    );

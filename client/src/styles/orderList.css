@@ -1,18 +1,19 @@
 .order-container {
-   max-width: 800px;
-   margin: auto;
+   width: 100%; /* Ancho completo */
    padding: 20px;
+   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
 
 h2 {
    text-align: center;
    color: #2C3E50;
+   margin-bottom: 20px; /* Espacio debajo del título */
 }
 
 .new-order-btn {
    display: block;
-   margin: 10px auto;
-   padding: 10px 15px;
+   margin: 20px auto; /* Espacio más grande para el botón */
+   padding: 10px 20px;
    background-color: #3498db;
    color: white;
    border: none;
@@ -26,13 +27,13 @@ h2 {
 }
 
 .order-table {
-   width: 100%;
+   width: 100%; /* Ancho completo */
    border-collapse: collapse;
    margin-top: 20px;
 }
 
 .order-table th, .order-table td {
-   padding: 10px;
+   padding: 12px 15px; /* Más espacio para las celdas */
    text-align: left;
    border-bottom: 1px solid #ddd;
 }
@@ -52,42 +53,6 @@ h2 {
    background-color: #f5f5f5;
 }
 
-.order-table .edit-btn, .order-table .cancel-btn, .order-table .charge-btn {
-   padding: 8px 12px;
-   border: none;
-   border-radius: 5px;
-   font-size: 14px;
-   cursor: pointer;
-   transition: background 0.3s ease-in-out;
-}
-
-.order-table .edit-btn {
-   background-color: #3498db;
-   color: white;
-}
-
-.order-table .edit-btn:hover {
-   background-color: #2980b9;
-}
-
-.order-table .cancel-btn {
-   background-color: #e74c3c;
-   color: white;
-}
-
-.order-table .cancel-btn:hover {
-   background-color: #c0392b;
-}
-
-.order-table .charge-btn {
-   background-color: #2ecc71;
-   color: white;
-}
-
-.order-table .charge-btn:hover {
-   background-color: #27ae60;
-}
-
 .order-actions {
    display: flex;
    gap: 10px;
@@ -95,16 +60,13 @@ h2 {
 }
 
 .order-actions button {
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   padding: 8px 12px;
+   padding: 8px 15px; /* Mejor tamaño para los botones */
    border: none;
    border-radius: 5px;
    font-size: 14px;
    cursor: pointer;
    transition: background 0.3s ease-in-out;
-   gap: 5px;
+   gap: 8px;
 }
 
 .order-actions button i {
@@ -136,4 +98,18 @@ h2 {
 
 .order-actions .charge-btn:hover {
    background-color: #27ae60;
+}
+
+@media (max-width: 768px) {
+   .order-container {
+      padding: 15px;
+   }
+
+   .order-table th, .order-table td {
+      padding: 8px 10px; /* Menos padding en pantallas pequeñas */
+   }
+
+   .order-actions button {
+      padding: 6px 10px; /* Botones más pequeños en pantallas pequeñas */
+   }
 }
