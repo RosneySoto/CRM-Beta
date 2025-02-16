@@ -4,7 +4,7 @@ import axios from "axios";
 import OrderModal from "../Modals/CreateOrderBuyModal"; // Importamos el modal
 import "../styles/orderList.css";
 
-function OrderList() {
+function OrderList() {  
    const [orders, setOrders] = useState([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);

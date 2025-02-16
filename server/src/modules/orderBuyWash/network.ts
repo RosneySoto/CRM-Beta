@@ -3,22 +3,37 @@ import controllerError from '../../middleware/controllerError';
 import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 import { addOrder, getAllOrders } from './controller';
+import { CustomRequest } from '../../types/Users'
 const router = express.Router();
 
 //Crea una orden de compra
-router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
-   addOrder(req.body)
+router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
+   
+   console.log('ENVIO DE LA PETICION ', req.body);
+   console.log('Usuario autenticado:', req.user);
+
+   // Asegurar que req.user está presente
+   if (!req.user || !req.user.id) {
+      return res.status(401).send('Unauthorized: No user ID found');
+   }
+
+   // Modificar los datos para incluir el createUserId desde el token
+   const orderData = {
+      ...req.body,
+      createUserId: req.user.id  // Aquí se asigna el ID del usuario autenticado
+   };
+   addOrder(orderData)
       .then((data) => {
-         switch(data.status){
+         switch (data.status) {
             case 201:
                res.status(201).send(data.message);
                break;
-               case 420:
-                  res.status(420).send(data.message);
-                  break;
-               default:
-                  controllerError(data, req, res);
-                  break
+            case 420:
+               res.status(420).send(data.message);
+               break;
+            default:
+               controllerError(data, req, res);
+               break
          }
       })
       .catch((e) => {

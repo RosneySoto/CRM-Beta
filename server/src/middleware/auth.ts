@@ -20,6 +20,8 @@ export const generateToken = async (req: CustomRequest, res: Response, next: Nex
    const token = jwt.sign( payload, config.jwt_secret, { expiresIn: '24h' });
    res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 });
 
+   console.log("Payload enviado en el token:", payload);
+
    req.token = token;
    // console.log('[TOKEN] ' + token);
    next();
@@ -33,6 +35,9 @@ export const authenticate = async (req: CustomRequest, res: Response, next: Next
       };
       const decoded = jwt.verify(token, config.jwt_secret);
       req.user = decoded as UserType;
+
+      console.log("Usuario Decodificado:", decoded);
+
       next();
    } catch (err) {
       return res.status(401).send('unauthorized');

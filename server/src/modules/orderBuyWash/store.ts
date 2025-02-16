@@ -4,85 +4,6 @@ import OrderBuy from './model';
 import Customer from '../customers/model';
 import { OrderBuyType } from '../../types/orderBuy';
 
-// export async function addOrder(data: OrderBuyType) {
-//    try {
-//       const newItem = new OrderBuy(data);
-//       const result = await newItem.save();
-//       return {
-//          status: 201,
-//          message: result
-//       };
-//    } catch (error) {
-//       console.log("[ERROR] -> addOrder", error);
-//       return {
-//          status: 400,
-//          message: "An error occurred while creating the order",
-//          detail: error
-//       };
-//    };
-// };
-
-// export async function getAllOrder() {
-//    try {
-//       const allOrder = await OrderBuy.find()
-//          .populate({
-//             path: 'customerId',
-//             select: 'name lastname vehicles._id'
-//          })
-
-//       if(!allOrder) throw new Error ('No orders found');
-
-//       return {
-//          status: 200,
-//          message: allOrder
-//       };
-//    } catch (e) {
-//       console.log("[ERROR] -> getAll", e);
-//       return {
-//          status: 400,
-//          message: "An error occurred while getting all customers",
-//          detail: e,
-//       };
-//    }
-// }
-
-// export async function addOrder(orderData: OrderBuyType) {
-//    try {
-//       // Primero, verifica si el cliente existe
-//       const customer = await Customer.findById(orderData.customerId);
-//       if (!customer) {
-//          throw new Error('Customer not found');
-//       }
-
-//       // Verifica si el vehículo pertenece al cliente
-//       const vehicleExists = customer.vehicles.some(vehicle => vehicle.id.toString() === orderData.vehicleId);
-//       if (!vehicleExists) {
-//          throw new Error('Vehicle not found for this customer');
-//       }
-
-//       // Crea la orden de compra
-//       const newOrder = new OrderBuy({
-//          nameService: orderData.nameService,
-//          customerId: orderData.customerId,
-//          vehicleId: orderData.vehicleId,
-//          createUserId: orderData.createUserId,
-//       });
-
-//       await newOrder.save();
-
-//       return {
-//          status: 201,
-//          message: 'Order created successfully',
-//          data: newOrder,
-//       };
-//    } catch (error) {
-//       return {
-//          status: 400,
-//          message: error,
-//       };
-//    }
-// }
-
 // store.ts
 export async function addOrder(orderData: OrderBuyType) {
    try {
@@ -104,6 +25,7 @@ export async function addOrder(orderData: OrderBuyType) {
          vehicleId: orderData.vehicleId,
          createUserId: orderData.createUserId, // Guarda el ID del usuario que crea la orden
       });
+      console.log('newOrder', newOrder);
 
       await newOrder.save();
 

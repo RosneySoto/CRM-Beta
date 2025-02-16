@@ -22,15 +22,16 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
             if (!token) throw new Error("No token found. Please log in.");
 
             // Fetch products
-            const responseProducts = await axios.get("http://localhost:5000/product", {
+            const responseProducts = await axios.get("http://localhost:5000/product/allProducts", {
                headers: { Authorization: `Bearer ${token}` },
                withCredentials: true,
             });
+            console.log('Productos recibidos:', responseProducts.data);            
 
             if (Array.isArray(responseProducts.data.data)) {
                setProducts(responseProducts.data.data);
             } else {
-               console.error("La respuesta de productos no es un arreglo:", responseProducts.data);
+               console.error( "La respuesta de productos no es un arreglo:", responseProducts.data);
             }
 
             // Fetch customers
@@ -56,7 +57,6 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
 
    useEffect(() => {
       if (!formData.customerId) {
-         console.log("Ningún cliente seleccionado");
          setVehicles([]);
          return;
       }
@@ -92,13 +92,14 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
    const handleProductChange = (e) => {
       const selectedProductId = e.target.value;
       const selectedProduct = products.find((prod) => prod._id === selectedProductId);
-
+   
       setFormData((prev) => ({
          ...prev,
          product: selectedProductId,
-         price: selectedProduct ? selectedProduct.price : "",
+         price: selectedProduct ? selectedProduct.price.$numberDecimal : "", // ✅ Accediendo correctamente al valor numérico
       }));
    };
+   
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -106,21 +107,23 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
          const token = Cookies.get("token");
          if (!token) throw new Error("No token found. Please log in.");
 
+         console.log('ENVIO DE L POST', formData) // Recibe el objeto con los datos del formulario
          await axios.post(
             "http://localhost:5000/order",
             {
-               nameService: {
-                  product: formData.product,
-                  price: formData.price,
-               },
+               nameService: formData.product, // Asegúrate de que `formData.product` sea el valor correcto
                customerId: formData.customerId,
-               vehicle: formData.vehicle,
+               createUserId: formData.createUserId,  // Verifica que este campo esté presente
+               vehicleId: formData.vehicle // Verifica que este campo esté presente
             },
             {
-               headers: { Authorization: `Bearer ${token}` },
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
                withCredentials: true,
             }
          );
+
 
          onOrderCreated();
          onClose();
@@ -154,7 +157,7 @@ function OrderModal({ isOpen, onClose, onOrderCreated }) {
 
                   <label>
                      Price:
-                     <input readOnly type="number" value={formData.price?.$numberDecimal || ''} />
+                     <input readOnly type="number" value={formData.price ? parseFloat(formData.price) : ''} />
                   </label>
                </div>
 

@@ -10,9 +10,9 @@ const Sidebar = () => {
       <ul style={{ listStyle: "none", padding: 0 }}>
          <li><Link to="/customer" style={{ color: "#fff", textDecoration: "none" }}>Clientes</Link></li><br />
 
-         <li><Link to="/order" style={{ color: "#fff", textDecoration: "none" }}>Órdenes de Compra</Link></li><br />
+         <li><Link to="/order" style={{ color: "#fff", textDecoration: "none" }}>Órdenes de Servicios</Link></li><br />
 
-         <li><Link to="/products" style={{ color: "#fff", textDecoration: "none" }}>Productos</Link></li><br />
+         <li><Link to="/products" style={{ color: "#fff", textDecoration: "none" }}>Servicios</Link></li><br />
 
          <li><Link to="/roles" style={{ color: "#fff", textDecoration: "none" }}>Roles</Link></li><br />
 
