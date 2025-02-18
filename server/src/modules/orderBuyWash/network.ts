@@ -2,25 +2,20 @@ import express, {Request, Response, NextFunction} from "express";
 import controllerError from '../../middleware/controllerError';
 import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
-import { addOrder, getAllOrders } from './controller';
+import { addOrder, getAllOrders, getOrderById } from './controller';
 import { CustomRequest } from '../../types/Users'
 const router = express.Router();
 
 //Crea una orden de compra
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
-   
-   console.log('ENVIO DE LA PETICION ', req.body);
-   console.log('Usuario autenticado:', req.user);
-
    // Asegurar que req.user está presente
    if (!req.user || !req.user.id) {
       return res.status(401).send('Unauthorized: No user ID found');
    }
-
-   // Modificar los datos para incluir el createUserId desde el token
+   // Modifica los datos para incluir el createUserId desde el token
    const orderData = {
       ...req.body,
-      createUserId: req.user.id  // Aquí se asigna el ID del usuario autenticado
+      createUserId: req.user.id
    };
    addOrder(orderData)
       .then((data) => {
@@ -52,6 +47,29 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
                break;
             case 400:
                res.status(data.status).send(data.message);
+               break;
+         }
+      })
+      .catch((e) => {
+         console.log(e);
+         res.status(500).send('Unexpected Error');
+      });
+});
+
+router.get('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+   const { id } = req.params;
+   
+   getOrderById(id)
+      .then((data) => {
+         switch(data.status){
+            case 200:
+               res.status(200).send(data.message);
+               break;
+            case 404:
+               res.status(data.status).send(data.message);
+               break;
+            default:
+               controllerError(data, req, res);
                break;
          }
       })

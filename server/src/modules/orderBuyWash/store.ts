@@ -25,8 +25,6 @@ export async function addOrder(orderData: OrderBuyType) {
          vehicleId: orderData.vehicleId,
          createUserId: orderData.createUserId, // Guarda el ID del usuario que crea la orden
       });
-      console.log('newOrder', newOrder);
-
       await newOrder.save();
 
       return {
@@ -86,4 +84,54 @@ export async function getAllOrders() {
          detail: e,
       };
    }
+};
+
+export async function getOrderById(orderId: string) {
+   try {      
+      const orderData = await OrderBuy.findById(orderId)
+         .populate({ path: 'customerId', select: 'name lastname email vehicles' }) // Traer `vehicles`
+         .populate({ path: 'nameService', select: 'product price' })
+         .populate({ path: 'createUserId', select: 'name email' })
+         .lean(); // Convertir a objeto JSON puro
+
+      if (!orderData) {
+         throw new Error('Order not found');
+      };
+      // Convertir `customerId` en un objeto con tipado correcto
+      const customer = orderData.customerId as unknown as { 
+         _id: string; 
+         name: string; 
+         lastname: string; 
+         email: string; 
+         vehicles?: { _id: string; marca: string; modelo: string; patente: string }[];
+      };
+
+      // Buscar el vehículo específico dentro del array de `vehicles`
+      const vehicle = customer.vehicles?.find((v) => v._id.toString() === orderData.vehicleId?.toString());
+
+      if (!vehicle) {
+         throw new Error('Vehicle not found for this order');
+      };
+
+      // Eliminar `vehicles` del objeto `customerId` para que no se muestre en la respuesta
+      delete (customer as any).vehicles;
+
+      // Crear resultado final con solo el vehículo asociado
+      const result = {
+         ...orderData,
+         customerId: customer, // Ahora sin `vehicles`
+         vehicle, // Solo el vehículo asociado a la orden
+      };
+      delete result.vehicleId; // Eliminar `vehicleId` para evitar duplicados
+
+      return {
+         status: 200,
+         message: result,
+      };
+   } catch (error) {
+      return {
+         status: 400,
+         message: error,
+      };
+   };
 };

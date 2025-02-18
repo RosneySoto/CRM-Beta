@@ -1,8 +1,8 @@
 import { addOrder as _addOrder,
          getAllOrders as _getAllOrders,
+         getOrderById as _getOrderById
  } from './store';
 import { OrderBuyType } from '../../types/orderBuy';
-import OrderBuy from './model';
 
 export async function addOrder(data: OrderBuyType) {
    try {
@@ -47,3 +47,23 @@ export async function getAllOrders() {
       };
    }
 };
+
+export async function getOrderById(id: string) {
+   try {
+      const result = await _getOrderById(id);
+      if(!result){
+         return {
+            status: 404,
+            message: 'Order not found'
+         };
+      }
+      return result;
+   } catch (error) {
+      console.log(error);
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   }
+}
