@@ -21,7 +21,11 @@ const orderBuy = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',
       require: true
-   }
+   },
+   active: {
+      type: Boolean,
+      default: true
+   },
 },
    { timestamps: true}
 );

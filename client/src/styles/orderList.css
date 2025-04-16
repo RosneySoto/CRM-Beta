@@ -113,3 +113,14 @@ h2 {
       padding: 6px 10px; /* Botones más pequeños en pantallas pequeñas */
    }
 }
+
+.deleted-order {
+   background-color: #d3d3d3; /* Gris claro */
+   opacity: 0.6;
+}
+
+button:disabled {
+   background-color: #ccc;
+   cursor: not-allowed;
+}
+

@@ -133,8 +133,8 @@ function EditOrderModal({ isOpen, onClose, onOrderUpdated, selectedOrder, produc
          const token = Cookies.get("token");
          if (!token) throw new Error("No token found. Please log in.");
 
-         await axios.put(
-            `http://localhost:5000/order/${selectedOrder._id}`,
+         await axios.patch(
+            `http://localhost:5000/order/update/${selectedOrder._id}`,
             {
                nameService: formData.product,
                customerId: formData.customerId,

@@ -1,6 +1,8 @@
 import { addOrder as _addOrder,
          getAllOrders as _getAllOrders,
-         getOrderById as _getOrderById
+         getOrderById as _getOrderById,
+         updateOrder as _updateOrder,
+         deleteOrderBuy as _deleteOrderBuy
  } from './store';
 import { OrderBuyType } from '../../types/orderBuy';
 
@@ -65,5 +67,45 @@ export async function getOrderById(id: string) {
          message: 'Unexpected Controller Error',
          detail: error
       };
+   };
+};
+
+export async function updateOrder(id: string, data: OrderBuyType) {
+   try {
+      const result = await _updateOrder(id, data);
+
+      if(!result){
+         return {
+            status: 404,
+            message: 'Order not found'
+         };
+      }
+      return result;
+   } catch (error) {
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
    }
-}
+};
+
+export async function deleteOrderBuyPartial(id: string) {
+   try {
+      const result = await _deleteOrderBuy(id);
+      if(!result){
+         return {
+            status: 404,
+            message: 'Order buy not found'
+         }
+      }
+      return result;
+   } catch (error) {
+      console.log(error);
+      return {
+         status: 500,
+         message: 'Unexpected Controller Error',
+         detail: error
+      };
+   };
+};

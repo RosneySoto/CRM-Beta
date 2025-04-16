@@ -135,3 +135,49 @@ export async function getOrderById(orderId: string) {
       };
    };
 };
+
+export async function updateOrder(orderId: string, orderData: OrderBuyType) {
+   try {
+      // Verificar la existencia de la orden
+      const order = await getOrderById(orderId);
+      if(!order) throw new Error('Order not found');
+
+      // Actualizar la orden
+      const updatedOrder = await OrderBuy.findByIdAndUpdate(orderId, orderData, { new: true });
+
+      if(!updatedOrder) throw new Error('Error updating order');
+
+      return {
+         status: 200,
+         message: 'Order updated successfully',
+         data: updatedOrder,
+      };
+   } catch (error) {
+      return {
+         status: 400,
+         message: error,
+      };
+   };
+};
+
+export async function deleteOrderBuy(id: string) {
+   try {
+      const foundOrder = await OrderBuy.findOne({ _id: id });
+      if(!foundOrder) throw new Error ('Not order buy found');
+
+      foundOrder.active = false;
+      await foundOrder.save();
+
+      return{
+         status: 200,
+         message: 'The order was deleted'
+      };   
+   } catch (e) {
+      console.log("[ERROR] -> deleteOrderBuy", e);
+      return {
+         status: 400,
+         message: "An error occurred while deleting order",
+         detail: e,
+      };
+   };
+};
