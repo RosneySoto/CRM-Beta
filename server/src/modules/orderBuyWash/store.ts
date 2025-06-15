@@ -1,7 +1,8 @@
-import customerModel from '../customers/model';
-import userModel from '../users/model';
+// import customerModel from '../customers/model';
+// import userModel from '../users/model';
 import OrderBuy from './model';
 import Customer from '../customers/model';
+import Products from '../product/model';
 import { OrderBuyType } from '../../types/orderBuy';
 
 // store.ts
@@ -18,19 +19,30 @@ export async function addOrder(orderData: OrderBuyType) {
          throw new Error('Vehicle not found for this customer');
       }
 
+      const product = await Products.findById(orderData.nameService);
+      if(!product){
+         throw new Error('Product not found');
+      }
+
+      const productPrice = parseFloat(product.price?.toString()).toFixed(2); //Se parcea el precio para que se guarde en mongo con dos decimales
       // Crea la nueva orden
       const newOrder = new OrderBuy({
          nameService: orderData.nameService,
          customerId: orderData.customerId,
          vehicleId: orderData.vehicleId,
-         createUserId: orderData.createUserId, // Guarda el ID del usuario que crea la orden
+         createUserId: orderData.createUserId,
+         price: productPrice,
       });
+      
       await newOrder.save();
 
       return {
          status: 201,
          message: 'Order created successfully',
-         data: newOrder,
+         data: {
+            ...newOrder.toObject(),
+            price: parseFloat(newOrder.price?.toString()).toFixed(2),
+         },
       };
    } catch (error) {
       return {
@@ -122,7 +134,7 @@ export async function getOrderById(orderId: string) {
          customerId: customer, // Ahora sin `vehicles`
          vehicle, // Solo el vehículo asociado a la orden
       };
-      delete result.vehicleId; // Eliminar `vehicleId` para evitar duplicados
+      // delete result.vehicleId; // Eliminar `vehicleId` para evitar duplicados
 
       return {
          status: 200,
