@@ -15,7 +15,7 @@ const orderBuy = new Schema({
    },
    vehicleId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true
+      required: false
    },
    createUserId: {
       type: mongoose.Schema.Types.ObjectId,
