@@ -39,7 +39,7 @@ function LoginPage() {
    return (
       <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
          <div className="card p-4">
-            <h2 className="text-center mb-4" style={{ paddingBottom: '40px', paddingTop: '10px' }}>Bienvenido!</h2>
+            {/* <h2 className="text-center mb-4" style={{ paddingBottom: '40px', paddingTop: '10px' }}>Bienvenido!</h2> */}
             {error && <div className="alert alert-danger">{error}</div>}
             <LoginCard onSubmit={handleLoginSubmit} />
          </div>
