@@ -1,5 +1,5 @@
 import React from 'react';
-import OrderBuyPage from '../pages/OrderBuyPage';
+import OrderBuyPage from '@/pages/OrderBuyPage';
 
 function OrderPage() {
    return (

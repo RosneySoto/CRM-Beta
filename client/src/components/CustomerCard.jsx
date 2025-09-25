@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomerList from '../pages/customerPage';
+import CustomerList from '@/pages/customerPage';
 
 function CustomerPage() {
    return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/editCustomerModal.css';
+import '@/styles/editCustomerModal.css';
 
 function EditCustomerModal({ isOpen, onClose, onSave, customerData }) {
    const [name, setName] = useState('');

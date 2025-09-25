@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
-import CustomerModal from '../Modals/CreateCustomerModal';
-import EditCustomerModal from '../Modals/EditCustomerModal';
-import '../styles/customerList.css';
+import CustomerModal from '@/Modals/CreateCustomerModal';
+import EditCustomerModal from '@/Modals/EditCustomerModal';
+import '@/styles/customerList.css';
 
 function CustomerPage() {
    const [customers, setCustomers] = useState([]);

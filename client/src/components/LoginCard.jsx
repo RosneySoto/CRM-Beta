@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import "../styles/LoginCard.css" // Import your CSS styles
+import "@/styles/loginCard.css" // Import your CSS styles
 
 export default function LoginCard({ onSubmit }) {
   const [email, setEmail] = useState("")

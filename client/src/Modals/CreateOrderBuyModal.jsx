@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import '../styles/createOrderBuyModal.css'
+import '@/styles/createOrderBuyModal.css'
 
 function OrderModal({ isOpen, onClose, onOrderCreated }) {
    const [formData, setFormData] = useState({
