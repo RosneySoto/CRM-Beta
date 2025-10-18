@@ -72,7 +72,7 @@ export async function findOrderBuyById(orderBuyId: string) {
 
       // Si el vehículo fue encontrado, lo agregas al resultado
       if (vehicleResult && vehicleResult.status === 200) {
-         orderWithVehicle.vehicles = vehicleResult.message;
+         orderWithVehicle.vehicleId = vehicleResult.message;
       }
 
       const orderFinal = { ...orderWithVehicle };

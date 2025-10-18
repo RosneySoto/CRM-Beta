@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.jsx";
-import CustomerList from "./pages/customerPage.jsx";
+import CustomerList from "./pages/CustomerPage.jsx";
 // import CreateCustomerPage from "./pages/CreateCustomerPage.jsx";
 import DashboardLayout from "./components/DashboardLayaout.jsx"; // Nuevo componente para el layout
 import OrderBuyCard from "./pages/OrderBuyPage.jsx"

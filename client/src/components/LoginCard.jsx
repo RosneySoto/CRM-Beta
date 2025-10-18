@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Input, Button, Card, CardBody } from "@heroui/react"
-import "../styles/LoginCard.css"
+import "../styles/loginCard.css"
 
 export default function LoginCard({ onSubmit }) {
    const [email, setEmail] = useState("")
