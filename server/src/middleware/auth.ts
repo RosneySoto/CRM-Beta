@@ -11,17 +11,14 @@ export const generateToken = async (req: CustomRequest, res: Response, next: Nex
    if (!user) {
       return res.status(401).send('unauthorized');
    }
-
    const payload = {
       id: user.id,
       roleId: user.roleId
    };   
-
    const token = jwt.sign( payload, config.jwt_secret, { expiresIn: '24h' });
    res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 });
 
    req.token = token;
-   // console.log('[TOKEN] ' + token);
    next();
 };
 

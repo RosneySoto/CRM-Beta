@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction} from "express";
 import controllerError from '../../middleware/controllerError';
-import { addProduct, findProductById, updateProduct, deleteProduct } from './controller';
+import { addProduct, findProductById, updateProduct, deleteProduct, getAllProducts } from './controller';
 import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 const router = express.Router();
@@ -27,7 +27,45 @@ router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async
       });
 });
 
-//Mostrar un producto por ID
+router.get('/allProducts', authenticate, authorize([UserRole.Admin, UserRole.User
+]), async (req: Request, res: Response, next: NextFunction) => {
+   getAllProducts()   
+      .then((data) => {
+         switch(data.status){
+            case 200:
+               res.status(200).send(data);
+               break;
+            case 404:
+               res.status(data.status).send(data.message);
+               break;
+         }
+      })
+      .catch((e) => {
+         console.log(e);
+         res.status(500).send('Unexpected Error');
+      });
+});
+
+//Edita un producto por ID
+router.put('/update', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+   const idProduct = req.body.id;
+   const productData = req.body;
+
+   if(!idProduct) {
+      return res.status(404).send('Producto no encontrado')
+   }
+
+   const result = await updateProduct(idProduct, productData);
+   if(!result) {
+      return res.status(404).send('Error al buscar y editar el producto')
+   }
+   res.status(200).send({
+      message: 'User updated successfully',
+      data: result.message
+   });
+});
+
+// Mostrar un producto por ID
 router.get('/:id', authenticate, authorize([UserRole.Admin, UserRole.User
 ]), async (req: Request, res: Response, next: NextFunction) => {
    findProductById(req.params.id)
@@ -47,25 +85,6 @@ router.get('/:id', authenticate, authorize([UserRole.Admin, UserRole.User
    .catch((e) => {
       console.log(e);
       res.status(500).send('Unexpected Error');
-   });
-});
-
-//Edita un producto por ID
-router.put('/update', authenticate, async (req: Request, res: Response, next: NextFunction) => {
-   const idProduct = req.body.id;
-   const productData = req.body;
-
-   if(!idProduct) {
-      return res.status(404).send('Producto no encontrado')
-   }
-
-   const result = await updateProduct(idProduct, productData);
-   if(!result) {
-      return res.status(404).send('Error al buscar y editar el producto')
-   }
-   res.status(200).send({
-      message: 'User updated successfully',
-      data: result.message
    });
 });
 

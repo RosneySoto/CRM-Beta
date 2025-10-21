@@ -11,17 +11,25 @@ const orderBuy = new Schema({
    customerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Customers',
-      require: true
+      required: true
    },
    vehicleId: {
       type: mongoose.Schema.Types.ObjectId,
-      require: true
+      required: false
    },
    createUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Users',
-      require: true
-   }
+      required: true
+   },
+   active: {
+      type: Boolean,
+      default: true
+   },
+   price: {
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
+   },
 },
    { timestamps: true}
 );

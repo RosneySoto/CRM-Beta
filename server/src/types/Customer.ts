@@ -1,4 +1,5 @@
 interface Vehicle {
+   id: string
    marca: string;
    modelo: string;
    patente: string;
@@ -12,5 +13,5 @@ export interface CustomerType {
    image: string;
    email: string;
    numberPhone: Number;
-   vehicles: Vehicle[];
+   vehicles?: Vehicle[];
 };

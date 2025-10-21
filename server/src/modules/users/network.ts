@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import controllerError  from '../../middleware/controllerError';
 import { generateToken, authenticate } from '../../middleware/auth';
 import { CustomRequest } from '../../types/Users';
-import { addUser, loginUser, updateUser, deleteUserPartial } from './controller';
+import { addUser, loginUser, updateUser, deleteUserPartial, logoutUser } from './controller';
 import { authorize } from '../../middleware/auth';
 import { UserRole } from '../../types/Roles';
 const router = express.Router();
@@ -91,6 +91,16 @@ router.delete('/:id', authenticate, authorize([UserRole.Admin]), async (req: Cus
          console.log(e);
          res.status(500).send("Unexpected Error");
       });
+});
+
+//Logout
+router.post('/logout', authenticate, async (req: CustomRequest, res: Response) => {
+   const result = await logoutUser(res);
+   if (result.status !== 200) {
+      return res.status(result.status).send(result.message)
+   } else {
+      res.status(200).send(result.message);
+   }
 });
 
 export default router;

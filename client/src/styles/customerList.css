@@ -1,0 +1,183 @@
+/* ===== Estilos Generales ===== */
+body {
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background-color: #fefefe;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #0070f3; /* azul acento */
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+/* ===== Botón Crear Cliente ===== */
+.create-customer-btn {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 0 0px 0; /* margen inferior, sin auto a la derecha */
+}
+
+.create-customer-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.create-customer-btn:disabled {
+  background-color: #a0c8ff;
+  cursor: not-allowed;
+}
+
+/* ===== Contenedor de Búsqueda ===== */
+.search-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  justify-content: flex-start; /* alinea con la tabla */
+}
+
+.search-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.search-input {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 220px; /* tamaño fijo, no ocupa todo el renglon */
+  flex-shrink: 0; /* evita que se achiquen demasiado */
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+
+
+
+/* ===== Tabla de Clientes ===== */
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.customer-table th,
+.customer-table td {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+}
+
+.customer-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.customer-table tr:hover {
+  background-color: #f4f9ff;
+}
+
+/* ===== Botones de Acción ===== */
+.customer-table button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 5px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.customer-table button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.customer-table button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Editar */
+.edit-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Eliminar */
+.delete-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .customer-table th,
+  .customer-table td {
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .create-customer-btn {
+    width: 100%;
+  }
+}

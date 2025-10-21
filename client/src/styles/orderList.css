@@ -1,0 +1,126 @@
+.order-container {
+   width: 100%; /* Ancho completo */
+   padding: 20px;
+   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+h2 {
+   text-align: center;
+   color: #2C3E50;
+   margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.new-order-btn {
+   display: block;
+   margin: 20px auto; /* Espacio más grande para el botón */
+   padding: 10px 20px;
+   background-color: #3498db;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background 0.3s ease-in-out;
+}
+
+.new-order-btn:hover {
+   background-color: #2980b9;
+}
+
+.order-table {
+   width: 100%; /* Ancho completo */
+   border-collapse: collapse;
+   margin-top: 20px;
+}
+
+.order-table th, .order-table td {
+   padding: 12px 15px; /* Más espacio para las celdas */
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+}
+
+.order-table th {
+   background-color: #2C3E50;
+   color: white;
+   font-weight: bold;
+}
+
+.order-table td {
+   font-size: 14px;
+   color: #333;
+}
+
+.order-table tr:hover {
+   background-color: #f5f5f5;
+}
+
+.order-actions {
+   display: flex;
+   gap: 10px;
+   justify-content: flex-start;
+}
+
+.order-actions button {
+   padding: 8px 15px; /* Mejor tamaño para los botones */
+   border: none;
+   border-radius: 5px;
+   font-size: 14px;
+   cursor: pointer;
+   transition: background 0.3s ease-in-out;
+   gap: 8px;
+}
+
+.order-actions button i {
+   font-size: 18px; /* Tamaño del ícono */
+}
+
+.order-actions .edit-btn {
+   background-color: #3498db;
+   color: white;
+}
+
+.order-actions .edit-btn:hover {
+   background-color: #2980b9;
+}
+
+.order-actions .cancel-btn {
+   background-color: #e74c3c;
+   color: white;
+}
+
+.order-actions .cancel-btn:hover {
+   background-color: #c0392b;
+}
+
+.order-actions .charge-btn {
+   background-color: #2ecc71;
+   color: white;
+}
+
+.order-actions .charge-btn:hover {
+   background-color: #27ae60;
+}
+
+@media (max-width: 768px) {
+   .order-container {
+      padding: 15px;
+   }
+
+   .order-table th, .order-table td {
+      padding: 8px 10px; /* Menos padding en pantallas pequeñas */
+   }
+
+   .order-actions button {
+      padding: 6px 10px; /* Botones más pequeños en pantallas pequeñas */
+   }
+}
+
+.deleted-order {
+   background-color: #d3d3d3; /* Gris claro */
+   opacity: 0.6;
+}
+
+button:disabled {
+   background-color: #ccc;
+   cursor: not-allowed;
+}
+

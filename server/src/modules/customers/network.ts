@@ -1,10 +1,19 @@
 import express, { Request, Response, NextFunction } from 'express';
 import controllerError  from '../../middleware/controllerError';
-import { addCustomer, updateCustomer, deleteCustomerPartial, getAll, getAllActive, getByName } from './controller';
+import { addCustomer, updateCustomer, deleteCustomerPartial, getAll, getAllActive, getByName, getByEmail } from './controller';
 import { authenticate, authorize } from '../../middleware/auth';
 import { CustomRequest } from '../../types/Users'
 import { UserRole } from '../../types/Roles'
 const router = express.Router();
+
+//Endpoint para conectar el front con el back
+router.get('/view-add', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
+   try {
+      res.status(200).send('Connected to api');
+   } catch (error) {
+      res.status(400).send('Error =>')
+   }
+});
 
 //Crea un nuevo cliente
 router.post('/', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: Request, res: Response, next: NextFunction) => {
@@ -103,7 +112,7 @@ router.get('/', authenticate, async (req: CustomRequest, res: Response, next: Ne
       });
 });
 
-//Lista todos los clientes
+//Lista todos los clientes activos
 router.get('/all', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
    getAllActive()
       .then((data) => {
@@ -127,6 +136,26 @@ router.get('/name', authenticate, async (req: CustomRequest, res: Response, next
    console.log(req.body);
    
    getByName(req.body.name)
+      .then((data) => {
+         switch(data.status){
+            case 200:
+               res.status(200).send(data.message);
+               break;
+            case 400:
+               res.status(data.status).send(data.message);
+               break;
+         }
+      })
+      .catch((e) => {
+         console.log(e);
+         res.status(500).send('Unexpected Error');
+      });
+});
+
+router.get('/search/email', authenticate, async (req: CustomRequest, res: Response, next: NextFunction) => {
+   console.log(req.body);
+   
+   getByEmail(req.body.email)
       .then((data) => {
          switch(data.status){
             case 200:
