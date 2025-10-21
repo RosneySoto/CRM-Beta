@@ -27,7 +27,7 @@ export async function addCustomer(data: CustomerType) {
       };
 
       //Valida que la patente exista en la base de datos
-      for (const vehicle of data.vehicles) {
+      for (const vehicle of data.vehicles || []) {
          const existingVehicle = await Customers.findOne({ 'vehicles.patente': vehicle.patente });
          if (existingVehicle) {
             return {
