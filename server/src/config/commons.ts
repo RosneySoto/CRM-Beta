@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config()
 
-const dbConnectUri: string = process.env.DB_CONNECTION_URI as string;
+const dbConnectUri: string = process.env.MONGO_URI as string;
 
 const config = {
    port: process.env.PORT || 3000,
