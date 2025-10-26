@@ -4,6 +4,13 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_BASE_PATH || "/CRM-Beta",
-  url: "crm-beta.onrender.com" || `preview.allowedHosts`
+  base: process.env.VITE_BASE_PATH || '/CRM-Beta',
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 10000,
+  },
 })
