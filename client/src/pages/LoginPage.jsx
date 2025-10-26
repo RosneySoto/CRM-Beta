@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginCard from '../components/LoginCard';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import Cookies from 'jsonwebtoken';
 import { jwtDecode } from 'jwt-decode';
 
 

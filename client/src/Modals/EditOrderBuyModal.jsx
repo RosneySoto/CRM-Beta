@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
+import Cookies from "jsonwebtoken";
 
 function EditOrderModal({ isOpen, onClose, onOrderUpdated, selectedOrder, products }) {
    const [formData, setFormData] = useState({
