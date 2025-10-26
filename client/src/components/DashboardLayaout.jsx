@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./SideBar";
-import Cookies from "js-cookie";
+import Cookies from "jsonwebtoken";
 
 const DashboardLayout = () => {
    const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import Cookies from "jsonwebtoken";
 import axios from "axios";
 import CreateOrderModal from "../Modals/CreateOrderBuyModal";
 import EditOrderModal from "../Modals/EditOrderBuyModal";
