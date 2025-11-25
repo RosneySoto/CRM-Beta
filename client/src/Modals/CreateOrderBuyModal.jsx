@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from "jsonwebtoken";
+import Cookies from "js-cookie";
 import '../styles/createOrderBuyModal.css'
 
 function OrderModal({ isOpen, onClose, onOrderCreated }) {

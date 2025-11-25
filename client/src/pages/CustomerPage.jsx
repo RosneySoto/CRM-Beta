@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'jsonwebtoken';
+import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import CustomerModal from '../Modals/CreateCustomerModal';
 import EditCustomerModal from '../Modals/EditCustomerModal';
