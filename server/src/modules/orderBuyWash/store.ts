@@ -154,6 +154,14 @@ export async function updateOrder(orderId: string, orderData: OrderBuyType) {
       const order = await getOrderById(orderId);
       if(!order) throw new Error('Order not found');
 
+      // Validación: No permitir editar órdenes que ya fueron cobradas
+      if (order.message && order.message.active === false) {
+         return {
+            status: 400,
+            message: 'Cannot edit an order that has already been paid'
+         };
+      }
+
       // Actualizar la orden
       const updatedOrder = await OrderBuy.findByIdAndUpdate(orderId, orderData, { new: true });
 
@@ -175,14 +183,22 @@ export async function updateOrder(orderId: string, orderData: OrderBuyType) {
 export async function deleteOrderBuy(id: string) {
    try {
       const foundOrder = await OrderBuy.findOne({ _id: id });
-      if(!foundOrder) throw new Error ('Not order buy found');
+      if(!foundOrder) throw new Error ('Order not found');
+
+      // Validación: No permitir eliminar órdenes que ya fueron cobradas
+      if (foundOrder.active === false) {
+         return {
+            status: 400,
+            message: 'Cannot delete an order that has already been paid'
+         };
+      }
 
       foundOrder.active = false;
       await foundOrder.save();
 
       return{
          status: 200,
-         message: 'The order was deleted'
+         message: 'The order was deleted successfully'
       };   
    } catch (e) {
       console.log("[ERROR] -> deleteOrderBuy", e);

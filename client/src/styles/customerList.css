@@ -1,183 +1,508 @@
-/* ===== Estilos Generales ===== */
-body {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background-color: #fefefe;
-  color: #2c3e50;
-  margin: 0;
-  padding: 0;
+/* Contenedor principal */
+.customer-container {
+   width: 100%;
+   padding: 20px;
+   box-sizing: border-box;
+   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 2rem;
-  letter-spacing: 1px;
-  position: relative;
+.customer-container h2 {
+   text-align: center;
+   color: #2C3E50;
+   margin-bottom: 20px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 12px;
+   font-size: 2rem;
+   font-weight: 600;
 }
 
-h2::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: #0070f3; /* azul acento */
-  margin: 0.5rem auto 0;
-  border-radius: 2px;
+/* Estados de carga */
+.loading-text {
+   text-align: center;
+   font-size: 1.2rem;
+   color: #6c757d;
+   padding: 40px;
 }
 
-/* ===== Botón Crear Cliente ===== */
-.create-customer-btn {
-  padding: 10px 15px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin: 0 0 0px 0; /* margen inferior, sin auto a la derecha */
+/* Controles de filtro */
+.filter-controls {
+   display: flex;
+   justify-content: center;
+   gap: 10px;
+   margin-bottom: 20px;
+   flex-wrap: wrap;
 }
 
-.create-customer-btn:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
+.filter-btn {
+   padding: 8px 16px;
+   background-color: #f8f9fa;
+   border: 1px solid #dee2e6;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   font-size: 14px;
+   color: #495057;
+   font-weight: 500;
 }
 
-.create-customer-btn:disabled {
-  background-color: #a0c8ff;
-  cursor: not-allowed;
+.filter-btn:hover {
+   background-color: #e9ecef;
+   transform: translateY(-1px);
 }
 
-/* ===== Contenedor de Búsqueda ===== */
+.filter-btn.active {
+   background-color: #667eea;
+   color: white;
+   border-color: #667eea;
+   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Controles de búsqueda */
+.search-controls {
+   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+   border-radius: 12px;
+   padding: 20px;
+   margin-bottom: 20px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 .search-container {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  justify-content: flex-start; /* alinea con la tabla */
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   flex-wrap: wrap;
 }
 
 .search-label {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2c3e50;
+   font-weight: 600;
+   color: #495057;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   min-width: 80px;
 }
 
 .search-input {
-  padding: 0.6rem 0.8rem;
-  font-size: 0.95rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  width: 220px; /* tamaño fijo, no ocupa todo el renglon */
-  flex-shrink: 0; /* evita que se achiquen demasiado */
+   padding: 10px 14px;
+   border: 2px solid #e9ecef;
+   border-radius: 8px;
+   font-size: 14px;
+   transition: all 0.2s ease;
+   min-width: 200px;
 }
 
 .search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+   border-color: #667eea;
+   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+   outline: none;
 }
 
-.search-input::placeholder {
-  color: #888;
+.search-input:disabled {
+   background-color: #f8f9fa;
+   cursor: not-allowed;
 }
 
+.create-customer-btn {
+   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+   color: white;
+   border: none;
+   border-radius: 8px;
+   width: 5cm; /* Anchura fija de 4cm */
+   padding: 10px 12px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 6px;
+   white-space: nowrap;
+   font-size: 13px;
+   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
 
+.create-customer-btn:hover:not(:disabled) {
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
 
+.create-customer-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+   transform: none;
+}
 
-/* ===== Tabla de Clientes ===== */
+/* Contenedor de tabla */
+.table-container {
+   background: white;
+   border-radius: 12px;
+   overflow: hidden;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla de clientes */
 .customer-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+   width: 100%;
+   border-collapse: collapse;
+   font-size: 14px;
 }
 
-.customer-table th,
-.customer-table td {
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.95rem;
-  border-bottom: 1px solid #eee;
+.customer-table th, .customer-table td {
+   padding: 16px 20px;
+   text-align: left;
+   border-bottom: 1px solid #e9ecef;
+   vertical-align: middle;
 }
 
 .customer-table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  color: #2c3e50;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+   background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+   color: white;
+   font-weight: 600;
+   font-size: 13px;
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+   position: sticky;
+   top: 0;
+   z-index: 10;
 }
 
-.customer-table tr:hover {
-  background-color: #f4f9ff;
+.customer-table th i {
+   margin-right: 8px;
+   opacity: 0.8;
 }
 
-/* ===== Botones de Acción ===== */
-.customer-table button {
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin: 0 5px;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+.customer-table tbody tr {
+   transition: all 0.2s ease;
 }
 
-.customer-table button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+.customer-table tbody tr:hover {
+   background-color: #f8f9fa;
+   transform: scale(1.01);
 }
 
-.customer-table button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.customer-table tbody tr.inactive-customer {
+   background-color: #f8f9fa;
+   opacity: 0.8;
 }
 
-/* Editar */
+.customer-table tbody tr.inactive-customer:hover {
+   background-color: #e9ecef;
+}
+
+/* Celdas con información del cliente */
+.customer-name, .customer-email, .customer-phone {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   font-weight: 500;
+}
+
+.customer-name i, .customer-email i, .customer-phone i {
+   color: #667eea;
+   font-size: 16px;
+   width: 20px;
+   text-align: center;
+}
+
+/* Badge de estado */
+.status-badge {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 6px 12px;
+   border-radius: 20px;
+   font-size: 12px;
+   font-weight: 600;
+   text-transform: uppercase;
+}
+
+.status-badge.active {
+   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+   color: white;
+}
+
+.status-badge.inactive {
+   background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+   color: white;
+}
+
+/* Contador de vehículos */
+.vehicle-count {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 6px 12px;
+   background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+   color: white;
+   border-radius: 20px;
+   font-size: 12px;
+   font-weight: 600;
+}
+
+/* Acciones de cliente */
+.customer-actions {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+}
+
+.edit-btn, .delete-btn {
+   padding: 8px 12px;
+   border: none;
+   border-radius: 6px;
+   cursor: pointer;
+   font-size: 12px;
+   font-weight: 600;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+}
+
 .edit-btn {
-  background-color: #007bff;
-  color: #fff;
+   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+   color: white;
 }
 
-.edit-btn:hover {
-  background-color: #0056b3;
+.edit-btn:hover:not(:disabled) {
+   background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Eliminar */
 .delete-btn {
-  background-color: #dc3545;
-  color: #fff;
+   background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+   color: white;
 }
 
-.delete-btn:hover {
-  background-color: #c82333;
+.delete-btn:hover:not(:disabled) {
+   background: linear-gradient(135deg, #c82333 0%, #a02622 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
-/* ===== Responsive ===== */
+.edit-btn:disabled, .delete-btn:disabled {
+   opacity: 0.5;
+   cursor: not-allowed;
+   transform: none;
+}
+
+/* Estado sin datos */
+.no-data {
+   text-align: center;
+   padding: 40px 20px;
+   color: #6c757d;
+   font-size: 16px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 10px;
+}
+
+.no-data i {
+   font-size: 24px;
+   color: #adb5bd;
+}
+
+/* Contenedor principal de controles */
+.controls-section {
+   max-width: 1200px;
+   margin: 0 auto 20px;
+   display: flex;
+   justify-content: center;
+   gap: 20px;
+   flex-wrap: wrap;
+}
+
+/* Controles de filtro */
+.filter-controls {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+   background: white;
+   padding: 12px 16px;
+   border-radius: 12px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+   border: 1px solid #e9ecef;
+}
+
+.filter-btn {
+   padding: 8px 16px;
+   background-color: #f8f9fa;
+   border: 1px solid #dee2e6;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   font-size: 13px;
+   color: #495057;
+   font-weight: 500;
+   white-space: nowrap;
+}
+
+.filter-btn:hover {
+   background-color: #e9ecef;
+   transform: translateY(-1px);
+}
+
+.filter-btn.active {
+   background-color: #667eea;
+   color: white;
+   border-color: #667eea;
+   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Contenedor de búsqueda y crear */
+.search-create-container {
+   display: flex;
+   gap: 15px;
+   align-items: center;
+   background: white;
+   padding: 12px 20px;
+   border-radius: 12px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+   border: 1px solid #e9ecef;
+   flex: 1;
+   max-width: 800px;
+}
+
+.search-container {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   flex: 1;
+}
+
+.search-label {
+   font-weight: 600;
+   color: #495057;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   white-space: nowrap;
+   font-size: 14px;
+}
+
+.search-input {
+   padding: 8px 12px;
+   border: 2px solid #e9ecef;
+   border-radius: 6px;
+   font-size: 13px;
+   transition: all 0.2s ease;
+   min-width: 140px;
+   flex: 1;
+}
+
+.search-input:focus {
+   border-color: #667eea;
+   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+   outline: none;
+}
+
+.search-input:disabled {
+   background-color: #f8f9fa;
+   cursor: not-allowed;
+}
+
+.create-customer-btn {
+   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+   color: white;
+   border: none;
+   border-radius: 8px;
+   padding: 10px 12px;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   white-space: nowrap;
+   font-size: 13px;
+   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+}
+
+.create-customer-btn:hover:not(:disabled) {
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.create-customer-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+   transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+   .customer-table th, .customer-table td {
+      padding: 12px 16px;
+   }
+   
+   .search-container {
+      flex-direction: column;
+      align-items: stretch;
+   }
+   
+   .search-input {
+      min-width: auto;
+      width: 100%;
+   }
+}
+
 @media (max-width: 768px) {
-  .search-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+   .customer-container {
+      padding: 15px;
+   }
+   
+   .customer-container h2 {
+      font-size: 1.5rem;
+   }
+   
+   .filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+   }
+   
+   .search-controls {
+      padding: 15px;
+   }
+   
+   .customer-table {
+      font-size: 12px;
+   }
+   
+   .customer-actions {
+      flex-direction: column;
+   }
+   
+   .edit-btn, .delete-btn {
+      justify-content: center;
+      padding: 10px 12px;
+   }
+}
 
-  .search-input {
-    width: 100%;
-  }
-
-  .customer-table th,
-  .customer-table td {
-    padding: 0.8rem;
-    font-size: 0.85rem;
-  }
-
-  .create-customer-btn {
-    width: 100%;
-  }
+@media (max-width: 480px) {
+   .customer-container h2 {
+      font-size: 1.3rem;
+   }
+   
+   .customer-table th, .customer-table td {
+      padding: 8px 12px;
+   }
+   
+   .customer-name, .customer-email, .customer-phone {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+   }
+   
+   .status-badge, .vehicle-count {
+      font-size: 11px;
+      padding: 4px 8px;
+   }
 }

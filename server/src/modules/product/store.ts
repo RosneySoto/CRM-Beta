@@ -105,9 +105,7 @@ export async function getAllProductsStore() {
    try {
       const products = await Products.find();
       
-      if (!products) throw new Error('No products found');  
-
-      console.log('LISTA DE PRODUCTOS ', products);
+      if (!products) throw new Error('No products found');
       
       return {
          status: 200,

@@ -1,126 +1,398 @@
+/* Contenedor principal */
 .order-container {
-   width: 100%; /* Ancho completo */
+   width: 100%;
    padding: 20px;
-   box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+   box-sizing: border-box;
+   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h2 {
+.order-container h2 {
    text-align: center;
    color: #2C3E50;
-   margin-bottom: 20px; /* Espacio debajo del título */
+   margin-bottom: 20px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 12px;
+   font-size: 2rem;
+   font-weight: 600;
 }
 
-.new-order-btn {
-   display: block;
-   margin: 20px auto; /* Espacio más grande para el botón */
-   padding: 10px 20px;
-   background-color: #3498db;
+/* Estados de carga y error */
+.loading-text {
+   text-align: center;
+   font-size: 1.2rem;
+   color: #6c757d;
+   padding: 40px;
+}
+
+.error-text {
+   text-align: center;
+   font-size: 1.2rem;
+   color: #dc3545;
+   padding: 40px;
+}
+
+/* Controles de filtro */
+.filter-controls {
+   display: flex;
+   gap: 8px;
+   align-items: center;
+   background: white;
+   padding: 12px 16px;
+   border-radius: 12px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+   border: 1px solid #e9ecef;
+   margin-bottom: 20px;
+   flex-wrap: wrap;
+   justify-content: center;
+}
+
+.filter-btn {
+   padding: 8px 16px;
+   background-color: #f8f9fa;
+   border: 1px solid #dee2e6;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   font-size: 13px;
+   color: #495057;
+   font-weight: 500;
+   white-space: nowrap;
+}
+
+.filter-btn:hover {
+   background-color: #e9ecef;
+   transform: translateY(-1px);
+}
+
+.filter-btn.active {
+   background-color: #667eea;
+   color: white;
+   border-color: #667eea;
+   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Contenedor de búsqueda */
+.search-controls {
+   background: white;
+   padding: 12px 20px;
+   border-radius: 12px;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+   border: 1px solid #e9ecef;
+   margin-bottom: 20px;
+}
+
+.search-container {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   flex-wrap: wrap;
+}
+
+.search-label {
+   font-weight: 600;
+   color: #495057;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   white-space: nowrap;
+   font-size: 14px;
+}
+
+.search-input {
+   padding: 8px 12px;
+   border: 2px solid #e9ecef;
+   border-radius: 6px;
+   font-size: 13px;
+   transition: all 0.2s ease;
+   min-width: 200px;
+   flex: 1;
+}
+
+.search-input:focus {
+   border-color: #667eea;
+   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+   outline: none;
+}
+
+.search-input:disabled {
+   background-color: #f8f9fa;
+   cursor: not-allowed;
+}
+
+/* Botón crear orden */
+.create-order-btn {
+   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
    color: white;
    border: none;
-   border-radius: 5px;
+   border-radius: 8px;
+   padding: 10px 20px;
+   font-weight: 600;
    cursor: pointer;
-   transition: background 0.3s ease-in-out;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 6px;
+   white-space: nowrap;
+   font-size: 13px;
+   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
-.new-order-btn:hover {
-   background-color: #2980b9;
+.create-order-btn:hover:not(:disabled) {
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
+.create-order-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+   transform: none;
+}
+
+/* Contenedor de tabla */
+.table-container {
+   background: white;
+   border-radius: 12px;
+   overflow: hidden;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla de órdenes */
 .order-table {
-   width: 100%; /* Ancho completo */
+   width: 100%;
    border-collapse: collapse;
-   margin-top: 20px;
+   font-size: 14px;
 }
 
 .order-table th, .order-table td {
-   padding: 12px 15px; /* Más espacio para las celdas */
+   padding: 16px 20px;
    text-align: left;
-   border-bottom: 1px solid #ddd;
+   border-bottom: 1px solid #e9ecef;
+   vertical-align: middle;
 }
 
 .order-table th {
-   background-color: #2C3E50;
+   background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
    color: white;
-   font-weight: bold;
+   font-weight: 600;
+   font-size: 13px;
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+   position: sticky;
+   top: 0;
+   z-index: 10;
 }
 
-.order-table td {
-   font-size: 14px;
-   color: #333;
+.order-table th i {
+   margin-right: 8px;
+   opacity: 0.8;
 }
 
-.order-table tr:hover {
-   background-color: #f5f5f5;
+.order-table tbody tr {
+   transition: all 0.2s ease;
 }
 
+.order-table tbody tr:hover {
+   background-color: #f8f9fa;
+   transform: scale(1.01);
+}
+
+.order-table tbody tr.paid-order {
+   background-color: #f8f9fa;
+   opacity: 0.8;
+}
+
+.order-table tbody tr.paid-order:hover {
+   background-color: #e9ecef;
+}
+
+/* Celdas con información */
+.service-name, .price-amount, .customer-name, .customer-email, .vehicle-info, .created-by {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   font-weight: 500;
+}
+
+.service-name i, .price-amount i, .customer-name i, .customer-email i, .vehicle-info i, .created-by i {
+   color: #667eea;
+   font-size: 16px;
+   width: 20px;
+   text-align: center;
+}
+
+/* Badge de estado */
+.status-badge {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 6px 12px;
+   border-radius: 20px;
+   font-size: 12px;
+   font-weight: 600;
+   text-transform: uppercase;
+}
+
+.status-badge.pending {
+   background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+   color: white;
+}
+
+.status-badge.paid {
+   background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+   color: white;
+}
+
+/* Acciones de orden */
 .order-actions {
    display: flex;
-   gap: 10px;
-   justify-content: flex-start;
-}
-
-.order-actions button {
-   padding: 8px 15px; /* Mejor tamaño para los botones */
-   border: none;
-   border-radius: 5px;
-   font-size: 14px;
-   cursor: pointer;
-   transition: background 0.3s ease-in-out;
    gap: 8px;
+   flex-wrap: wrap;
 }
 
-.order-actions button i {
-   font-size: 18px; /* Tamaño del ícono */
+.edit-btn, .cancel-btn, .charge-btn {
+   padding: 6px 10px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   font-size: 12px;
+   font-weight: 600;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   gap: 4px;
+   text-transform: uppercase;
+   letter-spacing: 0.3px;
 }
 
-.order-actions .edit-btn {
-   background-color: #3498db;
+.edit-btn {
+   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
    color: white;
 }
 
-.order-actions .edit-btn:hover {
-   background-color: #2980b9;
+.edit-btn:hover:not(:disabled) {
+   background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
-.order-actions .cancel-btn {
-   background-color: #e74c3c;
+.cancel-btn {
+   background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
    color: white;
 }
 
-.order-actions .cancel-btn:hover {
-   background-color: #c0392b;
+.cancel-btn:hover:not(:disabled) {
+   background: linear-gradient(135deg, #c82333 0%, #a02622 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
-.order-actions .charge-btn {
-   background-color: #2ecc71;
+.charge-btn {
+   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
    color: white;
 }
 
-.order-actions .charge-btn:hover {
-   background-color: #27ae60;
+.charge-btn:hover:not(:disabled) {
+   background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.edit-btn:disabled, .cancel-btn:disabled, .charge-btn:disabled {
+   opacity: 0.5;
+   cursor: not-allowed;
+   transform: none;
+   background: #6c757d;
+}
+
+/* Estado sin datos */
+.no-data {
+   text-align: center;
+   padding: 40px 20px;
+   color: #6c757d;
+   font-size: 16px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 10px;
+}
+
+.no-data i {
+   font-size: 24px;
+   color: #adb5bd;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+   .order-table th, .order-table td {
+      padding: 12px 16px;
+   }
+   
+   .search-container {
+      flex-direction: column;
+      align-items: stretch;
+   }
+   
+   .search-input {
+      min-width: auto;
+      width: 100%;
+   }
 }
 
 @media (max-width: 768px) {
    .order-container {
       padding: 15px;
    }
+   
+   .order-container h2 {
+      font-size: 1.5rem;
+   }
+   
+   .filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+   }
+   
+   .search-controls {
+      padding: 15px;
+   }
+   
+   .order-table {
+      font-size: 12px;
+   }
+   
+   .order-actions {
+      flex-direction: column;
+   }
+   
+   .edit-btn, .cancel-btn, .charge-btn {
+      justify-content: center;
+      padding: 8px 12px;
+   }
+}
 
+@media (max-width: 480px) {
+   .order-container h2 {
+      font-size: 1.3rem;
+   }
+   
    .order-table th, .order-table td {
-      padding: 8px 10px; /* Menos padding en pantallas pequeñas */
+      padding: 8px 12px;
    }
-
-   .order-actions button {
-      padding: 6px 10px; /* Botones más pequeños en pantallas pequeñas */
+   
+   .service-name, .price-amount, .customer-name, .customer-email, .vehicle-info, .created-by {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
    }
-}
-
-.deleted-order {
-   background-color: #d3d3d3; /* Gris claro */
-   opacity: 0.6;
-}
-
-button:disabled {
-   background-color: #ccc;
-   cursor: not-allowed;
+   
+   .status-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+   }
 }
 

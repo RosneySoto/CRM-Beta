@@ -5,52 +5,6 @@ import { generarBillId, generarInvoiceNumber } from '../../utils/bill'
 import { findOrderBuyById } from './store';
 import mongoose from 'mongoose';
 
-// export async function findOrderByIdandCreateBill(orderBuyId: string, paymentMethod: string) {
-//    try {
-//       const order = await findOrderBuyById(orderBuyId);      
-//       if(!order ||
-//          order.status !== 200 ||
-//          typeof order.message !== 'object' ||
-//          order.message === null) {
-//          return {
-//             status: 404,
-//             message: 'Order not found',
-//          };
-//       }
-//       const billId = await generarBillId();
-//       const invoiceNumber = generarInvoiceNumber(billId);
-//       const payment = paymentMethod;
-      
-//       const priceRaw = (order.message as any).nameService?.price;
-//       const amount =
-//          typeof priceRaw === 'object' && typeof priceRaw.toString === 'function'
-//             ? parseFloat(priceRaw.toString())
-//             : Number(priceRaw);
-
-//       const facturaPreview = {
-//          ...order.message,
-//          billId,
-//          invoiceNumber,
-//          payment,
-//          amount,
-//          paiDate: new Date(),
-//       };
-      
-      
-//       return {
-//          status: 200,
-//          message: facturaPreview,
-//       };
-//    } catch (error) {
-//       console.error('Unexpected Controller Error:', error);
-//       return {
-//          status: 500,
-//          message: 'Unexpected Controller Error',
-//          detail: error,
-//       };
-//    }
-// }
-
 export async function findOrderByIdandCreateBill(orderBuyId: string, paymentMethod: string) {
    try {
       const order = await findOrderBuyById(orderBuyId);
@@ -93,6 +47,10 @@ export async function findOrderByIdandCreateBill(orderBuyId: string, paymentMeth
 
       // Guarda la factura en la base de datos
       const facturaGuardada = await Payments.create(facturaData);
+
+      // Actualizar el estado de la orden a inactiva (ya cobrada)
+      const OrderBuy = (await import('../orderBuyWash/model')).default;
+      await OrderBuy.findByIdAndUpdate(orderBuyId, { active: false });
 
       return {
          status: 200,

@@ -1,25 +1,87 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import "../styles/sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ collapsed, onToggle }) => {
+   const location = useLocation();
+
+   const menuItems = [
+      {
+         path: "/customer",
+         label: "Clientes",
+         icon: "fas fa-users"
+      },
+      {
+         path: "/order",
+         label: "Órdenes de Servicios",
+         icon: "fas fa-shopping-cart"
+      },
+      {
+         path: "/billing",
+         label: "Facturación",
+         icon: "fas fa-file-invoice-dollar"
+      },
+      {
+         path: "/roles",
+         label: "Roles",
+         icon: "fas fa-user-shield"
+      },
+      {
+         path: "/users",
+         label: "Usuarios",
+         icon: "fas fa-user-cog"
+      }
+   ];
+
    return (
-      <div style={{ width: "250px", background: "#2C3E50", color: "#fff", padding: "20px", height: "100vh" }}>
+      <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+         <div className="sidebar-header">
+            <div className="sidebar-brand">
+               <div className="sidebar-logo">
+                  <i className="fas fa-car"></i>
+                  {!collapsed && <span>CarWash Pro</span>}
+               </div>
+               {!collapsed && (
+                  <div className="sidebar-subtitle">
+                     Sistema de Gestión
+                  </div>
+               )}
+            </div>
+            <button className="sidebar-toggle" onClick={onToggle}>
+               <i className={`fas ${collapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
+            </button>
+         </div>
 
-      <h3>Lista de Acciones</h3><hr />
-      
-      <ul style={{ listStyle: "none", padding: 0 }}>
-         <li><Link to="/customer" style={{ color: "#fff", textDecoration: "none" }}>Clientes</Link></li><br />
+         <nav className="sidebar-nav">
+            <ul className="sidebar-menu">
+               {menuItems.map((item, index) => (
+                  <li key={index} className="sidebar-menu-item">
+                     <Link 
+                        to={item.path} 
+                        className={`sidebar-link ${location.pathname === item.path ? 'active' : ''}`}
+                        title={collapsed ? item.label : ''}
+                     >
+                        <div className="sidebar-link-content">
+                           <i className={item.icon}></i>
+                           {!collapsed && <span>{item.label}</span>}
+                        </div>
+                        {location.pathname === item.path && (
+                           <div className="sidebar-active-indicator"></div>
+                        )}
+                     </Link>
+                  </li>
+               ))}
+            </ul>
+         </nav>
 
-         <li><Link to="/order" style={{ color: "#fff", textDecoration: "none" }}>Órdenes de Servicios</Link></li><br />
-
-         <li><Link to="/products" style={{ color: "#fff", textDecoration: "none" }}>Servicios</Link></li><br />
-
-         <li><Link to="/roles" style={{ color: "#fff", textDecoration: "none" }}>Roles</Link></li><br />
-
-         <li><Link to="/users" style={{ color: "#fff", textDecoration: "none" }}>Usuarios</Link></li><br />
-      </ul>
-   </div>
-);
+         <div className="sidebar-footer">
+            <div className="sidebar-user-info">
+               <i className="fas fa-user-circle"></i>
+               {!collapsed && <span>Administrador</span>}
+            </div>
+         </div>
+      </div>
+   );
 };
 
 export default Sidebar;
