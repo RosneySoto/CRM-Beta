@@ -69,6 +69,7 @@ export async function login(email: string, password: string): Promise<LoginRespo
          if (checkPass) {
             const user: UserType = {
                id: userFind._id.toString(),
+               _id: userFind._id.toString(),
                name: userFind.name,
                lastname: userFind.lastname,
                image: userFind.image || '',

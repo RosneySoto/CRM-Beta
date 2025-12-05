@@ -5,6 +5,10 @@ import { CustomRequest } from '../../types/Users';
 import { addUser, loginUser, updateUser, deleteUserPartial, logoutUser } from './controller';
 import { authorize } from '../../middleware/auth';
 import { UserRole } from '../../types/Roles';
+import Users from './model'; // Agregar esta importación
+import Session from '../sessions/model';
+import jwt from 'jsonwebtoken';
+import config from '../../config/commons';
 const router = express.Router();
 
 //Crea un usuario nuevo
@@ -34,22 +38,42 @@ router.post('/login', async (req: CustomRequest, res: Response, next: NextFuncti
    const { email, password } = req.body;
 
    if (!email || !password) {
-      return res.status(404).json('User data is missing');
+      return res.status(400).json('Datos de usuario faltantes');
    }
 
    const result = await loginUser(email, password);
    
-
    if (result.status !== 200 || !result.user) {
       return res.status(result.status).send(result.message);
    }
 
-   req.user = result.user;
-   next();
-}, generateToken, (req: CustomRequest, res) => {
+   // Generar token JWT
+   const token = jwt.sign(
+      { id: result.user.id, roleId: result.user.roleId }, // Usar result.user.id
+      config.jwt_secret,
+      { expiresIn: '24h' }
+   );
+
+   // Crear sesión en base de datos
+   const session = new Session({
+      userId: result.user.id, // Cambiar result.user._id por result.user.id
+      token,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+   });
+   
+   await session.save();
+
    res.status(200).send({
       message: 'Login successful',
-      token: req.token,
+      token: token,
+      user: {
+         id: result.user.id,
+         name: result.user.name,
+         lastname: result.user.lastname,
+         email: result.user.email
+      }
    });
 });
 
@@ -93,13 +117,73 @@ router.delete('/:id', authenticate, authorize([UserRole.Admin]), async (req: Cus
       });
 });
 
+//Obtener información del usuario actual
+router.get('/me', authenticate, async (req: CustomRequest, res: Response) => {
+   try {
+      const userId = req.user?.id;
+      
+      if (!userId) {
+         return res.status(401).json({ 
+            error: 'No autorizado',
+            success: false 
+         });
+      }
+
+      // Buscar el usuario por ID y popular el rol
+      const user = await Users.findById(userId)
+         .select('-password') // Excluir la contraseña por seguridad
+         .populate('roleId', 'name'); // Popular el nombre del rol
+
+      if (!user) {
+         return res.status(404).json({ 
+            error: 'Usuario no encontrado',
+            success: false 
+         });
+      }
+
+      // Devolver la información del usuario
+      res.json({
+         id: user._id,
+         name: user.name,
+         lastname: user.lastname,
+         email: user.email,
+         image: user.image,
+         role: user.roleId,
+         active: user.active,
+         createdAt: user.createdAt,
+         updatedAt: user.updatedAt
+      });
+      
+   } catch (error) {
+      console.error('Error al obtener información del usuario:', error);
+      res.status(500).json({ 
+         error: 'Error al obtener información del usuario',
+         success: false 
+      });
+   }
+});
+
 //Logout
-router.post('/logout', authenticate, async (req: CustomRequest, res: Response) => {
-   const result = await logoutUser(res);
-   if (result.status !== 200) {
-      return res.status(result.status).send(result.message)
-   } else {
-      res.status(200).send(result.message);
+router.post('/logout', authenticate, async (req, res) => {
+   try {
+      // Marcar la sesión como inactiva
+      await Session.findByIdAndUpdate(req.sessionId, { 
+         isActive: false,
+         lastActivity: new Date()
+      });
+
+      console.log(`Usuario ${req.user?.name} cerró sesión - Sesión invalidada`);
+      
+      res.json({ 
+         message: 'Sesión cerrada exitosamente',
+         success: true 
+      });
+   } catch (error) {
+      console.error('Logout error:', error);
+      res.status(500).json({ 
+         error: 'Error al cerrar sesión',
+         success: false 
+      });
    }
 });
 

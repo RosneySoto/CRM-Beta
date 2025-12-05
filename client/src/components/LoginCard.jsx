@@ -1,95 +1,182 @@
 "use client"
 
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { Input, Button, Card, CardBody } from "@heroui/react"
-import "../styles/loginCard.css"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import Swal from "sweetalert2";
+import "../styles/loginCard.css";
 
-export default function LoginCard({ onSubmit }) {
-   const [email, setEmail] = useState("")
-   const [password, setPassword] = useState("")
-   const navigate = useNavigate()
+export default function LoginCard() {
+   const [formData, setFormData] = useState({
+      email: "",
+      password: ""
+   });
+   const [loading, setLoading] = useState(false);
+   const [errors, setErrors] = useState({});
+   const navigate = useNavigate();
 
-   const handleSubmit = (e) => {
-      e.preventDefault()
-      onSubmit({ email, password })
-      navigate("/")
-   }
+   const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({
+         ...prev,
+         [name]: value
+      }));
+      
+      // Clear errors when user starts typing
+      if (errors[name]) {
+         setErrors(prev => ({ ...prev, [name]: "" }));
+      }
+   };
+
+   const validateForm = () => {
+      const newErrors = {};
+      
+      if (!formData.email.trim()) {
+         newErrors.email = "El email es obligatorio";
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+         newErrors.email = "Email inválido";
+      }
+      
+      if (!formData.password.trim()) {
+         newErrors.password = "La contraseña es obligatoria";
+      }
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+   };
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      
+      if (!validateForm()) return;
+      
+      setLoading(true);
+      try {
+         const response = await axios.post("http://localhost:5000/users/login", {
+            email: formData.email,
+            password: formData.password
+         });
+
+         if (response.data.token) {
+            Cookies.set("token", response.data.token, { expires: 7 });
+            Swal.fire({
+               icon: 'success',
+               title: '¡Bienvenido!',
+               text: 'Inicio de sesión exitoso',
+               timer: 1500,
+               showConfirmButton: false
+            });
+            navigate("/dashboard"); // Redirigir a URL específica del dashboard
+         }
+      } catch (error) {
+         console.error("Login error:", error);
+         const errorMessage = error.response?.data?.message || "Error al iniciar sesión. Verifica tus credenciales.";
+         setErrors({ submit: errorMessage });
+         
+         Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage
+         });
+      } finally {
+         setLoading(false);
+      }
+   };
 
    return (
       <div className="login-container">
-         <Card className="login-card">
-            <CardBody>
-               {/* Header */}
-               <div className="login-header">
-                  <h1 className="login-title">Bienvenido</h1>
-                  <p className="login-subtitle">Inicia sesión en tu cuenta</p>
+         <div className="login-card">
+            {/* Header */}
+            <div className="login-header">
+               <div className="login-logo">
+                  <i className="fas fa-car"></i>
                </div>
+               <h1 className="login-title">
+                  <i className="fas fa-sign-in-alt"></i> CarWash Pro
+               </h1>
+               <p className="login-subtitle">Sistema de Gestión</p>
+            </div>
 
-               {/* Google Button */}
-               <Button
-                  className="google-button"
-                  onPress={() => console.log("Login con Google")}
-                  fullWidth
-               >
-                  <img
-                     src="https://www.svgrepo.com/show/475656/google-color.svg"
-                     alt="Google"
-                     className="google-icon"
-                  />
-                  Continuar con Google
-               </Button>
-
-               <div className="divider-container">
-                  <div className="divider-line"></div>
-                  <span className="divider-text">O continúa con tu email</span>
-                  <div className="divider-line"></div>
-               </div>
-
-               {/* Form */}
-               <form onSubmit={handleSubmit} className="login-form">
-                  <Input
-                     isRequired
-                     type="email"
-                     label="Email"
-                     placeholder="tu@email.com"
-                     value={email}
-                     onChange={(e) => setEmail(e.target.value)}
-                     className="input-field"
-                  />
-
-                  <Input
-                     isRequired
-                     type="password"
-                     label="Contraseña"
-                     placeholder="••••••••"
-                     value={password}
-                     onChange={(e) => setPassword(e.target.value)}
-                     className="input-field"
-                  />
-
-                  <div className="forgot-password">
-                     <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="login-form">
+               <div className="form-section">
+                  <h3><i className="fas fa-lock"></i> Iniciar Sesión</h3>
+                  
+                  <div className="form-group">
+                     <label htmlFor="email">
+                        <i className="fas fa-envelope"></i> Correo Electrónico
+                     </label>
+                     <div className="input-with-icon">
+                        <i className="fas fa-envelope input-icon"></i>
+                        <input
+                           type="email"
+                           id="email"
+                           name="email"
+                           value={formData.email}
+                           onChange={handleChange}
+                           placeholder="tu@email.com"
+                           className={errors.email ? 'error' : ''}
+                           required
+                        />
+                     </div>
+                     {errors.email && <span className="error-message">{errors.email}</span>}
                   </div>
 
-                  <Button
-                     type="submit"
-                     color="primary"
-                     fullWidth
-                     className="submit-button"
-                  >
-                     Iniciar Sesión
-                  </Button>
-               </form>
+                  <div className="form-group">
+                     <label htmlFor="password">
+                        <i className="fas fa-key"></i> Contraseña
+                     </label>
+                     <div className="input-with-icon">
+                        <i className="fas fa-key input-icon"></i>
+                        <input
+                           type="password"
+                           id="password"
+                           name="password"
+                           value={formData.password}
+                           onChange={handleChange}
+                           placeholder="••••••••"
+                           className={errors.password ? 'error' : ''}
+                           required
+                        />
+                     </div>
+                     {errors.password && <span className="error-message">{errors.password}</span>}
+                  </div>
 
-               {/* Register */}
-               <div className="register-link">
-                  <p>
-                     ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
-                  </p>
+                  {errors.submit && (
+                     <div className="error-message submit-error">
+                        {errors.submit}
+                     </div>
+                  )}
+
+                  <button 
+                     type="submit" 
+                     className="login-btn"
+                     disabled={loading}
+                  >
+                     {loading ? (
+                        <>
+                           <i className="fas fa-spinner fa-spin"></i> Iniciando...
+                        </>
+                     ) : (
+                        <>
+                           <i className="fas fa-sign-in-alt"></i> Iniciar Sesión
+                        </>
+                     )}
+                  </button>
                </div>
-            </CardBody>
-         </Card>
+            </form>
+
+            {/* Footer */}
+            <div className="login-footer">
+               <p>
+                  ¿No tienes cuenta? 
+                  <Link to="/register" className="register-link">
+                     <i className="fas fa-user-plus"></i> Regístrate
+                  </Link>
+               </p>
+            </div>
+         </div>
       </div>
-   )
+   );
 }

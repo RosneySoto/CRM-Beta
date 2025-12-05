@@ -6,7 +6,16 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import swaggerUI from 'swagger-ui-express';
-import swaggerSetup from './config/swagger'
+import swaggerSetup from './config/swagger';
+
+// IMPORTAR TODOS LOS MODELOS PARA REGISTRARLOS EN MONGOOSE
+import './modules/users/model';
+import './modules/customers/model';
+import './modules/product/model';
+import './modules/orderBuyWash/model';
+import './modules/payments/model';
+import './modules/roles/model';
+import './modules/sessions/model'; // ← IMPORTAR EL MODELO DE SESIONES
 
 const app = express();
 app.use(express.json());
