@@ -4,12 +4,9 @@ import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 import { findOrderByIdandCreateBill } from './controller';
 import Payments from './model';
-import OrderBuy from '../orderBuyWash/model'; // Importar modelo de órdenes
-// import { PaymentType } from '../../types/Payment'
+import OrderBuy from '../orderBuyWash/model';
 import { CustomRequest } from '../../types/Users'
 const router = express.Router();
-
-import {findOrderBuyById} from './store'
 
 router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
 
@@ -46,24 +43,25 @@ router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), as
       });
 });
 
-// En routes/payments.js o donde manejes las rutas de pagos
 router.get('/dashboard/sales', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req, res) => {
    try {
       // 1. Obtener todas las ventas/pagos completados (ingresos)
-      // CAMBIAR: Usar populate anidado correctamente
       const sales = await Payments.find({ active: true })
          .populate({
             path: 'orderBuyId',
-            populate: [
-               { path: 'customerId', select: 'name lastname' },
-               { path: 'nameService', select: 'product' }
-            ]
+            select: 'customerId nameService' // Solo seleccionar las referencias
          })
          .sort({ createdAt: -1 });
 
-      // QUITAR estos populate separados incorrectos
-      // await Payments.populate(sales, {...});
-      // await Payments.populate(sales, {...});
+      await Payments.populate(sales, {
+         path: 'orderBuyId.customerId',
+         select: 'name lastname'
+      });
+
+      await Payments.populate(sales, {
+         path: 'orderBuyId.nameService', 
+         select: 'product'
+      });
 
       // 2. Obtener todas las órdenes (pagadas y no pagadas)
       const allOrders = await OrderBuy.find({})
