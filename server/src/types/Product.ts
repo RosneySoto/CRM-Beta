@@ -4,5 +4,5 @@ export interface ProductType {
    product: string,
    price: string,
    detail: string,
-   quantity: string
+   quantity: string,
 }; 

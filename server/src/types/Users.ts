@@ -9,6 +9,7 @@ export interface UserType {
    email: string;
    password?: string;
    roleId: string;
+   active?: boolean;
 };
 
 export interface LoginResponse {
@@ -22,4 +23,5 @@ export interface CustomRequest extends Request {
    user?: UserType;
    token?: string;
    roleId?: string;
+   sessionId?: string;
 }

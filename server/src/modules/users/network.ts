@@ -164,7 +164,7 @@ router.get('/me', authenticate, async (req: CustomRequest, res: Response) => {
 });
 
 //Logout
-router.post('/logout', authenticate, async (req, res) => {
+router.post('/logout', authenticate, async (req: CustomRequest, res: Response) => {
    try {
       // Marcar la sesión como inactiva
       await Session.findByIdAndUpdate(req.sessionId, { 

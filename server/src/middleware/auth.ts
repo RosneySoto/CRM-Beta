@@ -46,19 +46,33 @@ export const authenticate = async (req: CustomRequest, res: Response, next: Next
          return res.status(401).json({ error: 'Sesión inválida o expirada' });
       }
       // SEGUNDO: Buscar el usuario manualmente
-      const user = await Users.findById(session.userId).select('name lastname email roleId active');
-      
-      if (!user) {
+      const userDoc = await Users.findById(session.userId).select('name lastname email roleId active');
+
+      if (!userDoc) {
+         console.log('❌ Usuario no encontrado para ID:', session.userId);
          return res.status(401).json({ error: 'Usuario no encontrado' });
       }
+
+      console.log('✅ Usuario encontrado:', userDoc.name, userDoc.lastname);
+
+      // Convertir a UserType y asignar
+      req.user = {
+         id: userDoc._id.toString(),
+         name: userDoc.name,
+         lastname: userDoc.lastname,
+         email: userDoc.email,
+         roleId: userDoc.roleId.toString(),
+         active: userDoc.active,
+         image: userDoc.image || ''
+      };
+
+      req.sessionId = session._id.toString(); // Convertir ObjectId a string
       // Actualizar última actividad
       await Session.updateOne(
          { _id: session._id },
          { lastActivity: new Date() }
       );
 
-      req.user = user;
-      req.sessionId = session._id;
       next();
    } catch (err) {
       console.error('❌ Error de autenticación:', err);

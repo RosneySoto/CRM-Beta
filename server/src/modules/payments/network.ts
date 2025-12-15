@@ -50,26 +50,24 @@ router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), as
 router.get('/dashboard/sales', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req, res) => {
    try {
       // 1. Obtener todas las ventas/pagos completados (ingresos)
+      // CAMBIAR: Usar populate anidado correctamente
       const sales = await Payments.find({ active: true })
          .populate({
             path: 'orderBuyId',
             populate: [
-               { 
-                  path: 'customerId', 
-                  select: 'name lastname' 
-               },
-               { 
-                  path: 'nameService', 
-                  select: 'product' 
-               }
+               { path: 'customerId', select: 'name lastname' },
+               { path: 'nameService', select: 'product' }
             ]
          })
          .sort({ createdAt: -1 });
 
+      // QUITAR estos populate separados incorrectos
+      // await Payments.populate(sales, {...});
+      // await Payments.populate(sales, {...});
+
       // 2. Obtener todas las órdenes (pagadas y no pagadas)
       const allOrders = await OrderBuy.find({})
          .populate({ path: 'customerId', select: 'name lastname' })
-         .populate({ path: 'nameService', select: 'product price' })
          .sort({ createdAt: -1 });
 
       // 3. Calcular métricas principales
