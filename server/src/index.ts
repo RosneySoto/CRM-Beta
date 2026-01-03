@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import swaggerUI from 'swagger-ui-express';
 import swaggerSetup from './config/swagger';
+import { closeBrowser } from './utils/pdf';
 
 // IMPORTAR TODOS LOS MODELOS PARA REGISTRARLOS EN MONGOOSE
 import './modules/users/model';
@@ -38,6 +39,25 @@ app.get('/', (req: Request, res: Response) => {
    res.send('Hello World!');
 });
 
-app.listen(config.port, () => {
+const server = app.listen(config.port, () => {
    console.log(`Server is running on ${config.host}:${config.port}`);
+});
+
+// Manejo de cierre graceful
+process.on('SIGINT', async () => {
+   console.log('Recibida señal SIGINT, cerrando servidor...');
+   await closeBrowser();
+   server.close(() => {
+      console.log('Servidor cerrado correctamente');
+      process.exit(0);
+   });
+});
+
+process.on('SIGTERM', async () => {
+   console.log('Recibida señal SIGTERM, cerrando servidor...');
+   await closeBrowser();
+   server.close(() => {
+      console.log('Servidor cerrado correctamente');
+      process.exit(0);
+   });
 });

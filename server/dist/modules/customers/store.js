@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getByName = exports.getAllActive = exports.getAll = exports.deleteCustomer = exports.findCustomerId = exports.addCustomer = void 0;
+exports.getCustomerByEmail = exports.getByName = exports.getAllActive = exports.getAll = exports.deleteCustomer = exports.findCustomerId = exports.addCustomer = void 0;
 const model_1 = __importDefault(require("./model"));
 function addCustomer(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -146,8 +146,9 @@ function getByName(name) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const regex = new RegExp(`^${name}`, 'i');
-            const users = yield model_1.default.find({ name: regex });
-            console.log('**** ' + users + '******');
+            const users = yield model_1.default.find({
+                $or: [{ name: regex }, { lastname: regex }] // Busca por nombre o apellido
+            });
             // Verificar si se encontraron usuarios
             if (users.length === 0)
                 throw new Error('User not found');
@@ -168,4 +169,32 @@ function getByName(name) {
     });
 }
 exports.getByName = getByName;
+;
+function getCustomerByEmail(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const regex = new RegExp(`^${email}`, 'i');
+            const user = yield model_1.default.find({
+                $or: [{ email: regex }]
+            });
+            if (user.length === 0)
+                throw new Error('User not found');
+            console.log(user);
+            return {
+                status: 200,
+                message: user
+            };
+        }
+        catch (e) {
+            console.log("[ERROR] -> getByName", e);
+            return {
+                status: 400,
+                message: "An error occurred while getting customers by name",
+                detail: e,
+            };
+        }
+        ;
+    });
+}
+exports.getCustomerByEmail = getCustomerByEmail;
 ;

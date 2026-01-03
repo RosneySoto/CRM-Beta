@@ -5,6 +5,7 @@ import CustomerList from "./pages/CustomerPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import DashboardLayout from "./components/DashboardLayaout.jsx";
 import OrderBuyCard from "./pages/OrderBuyPage.jsx";
+import BillingPage from "./pages/BillingPage.jsx";
 import { UserProvider } from "./contexts/UserContext";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
                   <Route path="dashboard" element={<DashboardPage />} />
                   <Route path="customer" element={<CustomerList />} />
                   <Route path="order" element={<OrderBuyCard />} />
+                  <Route path="billing" element={<BillingPage />} />
                </Route>
 
                {/* Redirección si la ruta no existe */}

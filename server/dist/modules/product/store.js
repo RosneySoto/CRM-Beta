@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.findProductById = exports.addProduct = void 0;
+exports.getAllProductsStore = exports.deleteProduct = exports.updateProduct = exports.findProductById = exports.addProduct = void 0;
 const model_1 = __importDefault(require("./model"));
 function addProduct(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -59,7 +59,7 @@ function findProductById(id) {
             console.log("[ERROR] -> findProductById", error);
             return {
                 status: 400,
-                message: "An error occurred while updating the product",
+                message: "An error occurred while updating the productsssss",
                 detail: error
             };
         }
@@ -133,4 +133,27 @@ function deleteProduct(id) {
     });
 }
 exports.deleteProduct = deleteProduct;
+;
+function getAllProductsStore() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const products = yield model_1.default.find();
+            if (!products)
+                throw new Error('No products found');
+            return {
+                status: 200,
+                message: 'Success',
+                data: products,
+            };
+        }
+        catch (error) {
+            return {
+                status: 400,
+                message: 'An error occurred while getting all products',
+                detail: error,
+            };
+        }
+    });
+}
+exports.getAllProductsStore = getAllProductsStore;
 ;

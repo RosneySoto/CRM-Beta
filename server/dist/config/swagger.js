@@ -11,19 +11,30 @@ const options = {
         info: {
             title: 'API control cliente',
             version: '1.0.0',
-            description: "API para manejar el control de ventas de un autolavado",
-            contact: {
-                name: "Developer"
+            description: 'API para manejar el control de ventas de un autolavado',
+        },
+        servers: [
+            {
+                url: 'http://localhost:5000',
+                description: 'Local Server',
             },
-            servers: [
-                {
-                    url: 'http://localhost:5000',
-                    description: 'Local Server'
-                }
-            ]
-        }
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
     },
-    apis: [path_1.default.resolve(__dirname, '../modules/*.yml')]
+    apis: [path_1.default.resolve(__dirname, '../doc/*.yml')],
 };
 const specs = (0, swagger_jsdoc_1.default)(options);
 exports.default = specs;

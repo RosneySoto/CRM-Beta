@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.findProductById = exports.addProduct = void 0;
+exports.getAllProducts = exports.deleteProduct = exports.updateProduct = exports.findProductById = exports.addProduct = void 0;
 const store_1 = require("./store");
 const model_1 = __importDefault(require("./model"));
 function addProduct(data) {
@@ -138,4 +138,27 @@ function deleteProduct(id) {
     });
 }
 exports.deleteProduct = deleteProduct;
+;
+function getAllProducts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.getAllProductsStore)();
+            if (!result) {
+                return {
+                    status: 404,
+                    message: 'No products found'
+                };
+            }
+            return result;
+        }
+        catch (error) {
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+    });
+}
+exports.getAllProducts = getAllProducts;
 ;

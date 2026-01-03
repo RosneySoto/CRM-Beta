@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 
 function PaymentModal({ isOpen, onClose, onPaymentCompleted, selectedOrder }) {
    const [paymentMethod, setPaymentMethod] = useState('');
+   const [sendEmail, setSendEmail] = useState(false);
+   const [generatePDF, setGeneratePDF] = useState(false);
    const [loading, setLoading] = useState(false);
 
    const handlePayment = async () => {
@@ -19,18 +21,62 @@ function PaymentModal({ isOpen, onClose, onPaymentCompleted, selectedOrder }) {
          const token = Cookies.get("token");
          if (!token) throw new Error("No token found. Please log in.");
 
-         await axios.post(
+         const response = await axios.post(
             `http://localhost:5000/payment/${selectedOrder._id}`,
             {
-               paymentMethod: paymentMethod
+               paymentMethod: paymentMethod,
+               sendEmail: sendEmail,
+               generatePDF: generatePDF
             },
             {
                headers: {
                   Authorization: `Bearer ${token}`,
                },
                withCredentials: true,
+               responseType: generatePDF ? 'blob' : 'json' // Si se genera PDF, esperar blob
             }
          );
+
+         let successMessage = 'El pago ha sido procesado correctamente';
+         let result = null;
+
+         // Si se generó PDF, la respuesta es un blob, descargar automáticamente
+         if (generatePDF && response.headers['content-type'] === 'application/pdf') {
+            // Crear descarga automática del PDF
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            const invoiceNumber = response.headers['content-disposition']?.match(/filename="([^"]+)"/)?.[1] || `Factura_${Date.now()}.pdf`;
+            link.href = url;
+            link.setAttribute('download', invoiceNumber);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            successMessage += '\n\n✅ PDF descargado automáticamente';
+
+            // Si también se envió email, mostrar ese resultado
+            if (sendEmail) {
+               successMessage += '\n✅ Factura enviada por email';
+            }
+         } else {
+            // Respuesta normal JSON
+            result = response.data?.message;
+
+            if (result?.emailResult || result?.pdfResult) {
+               successMessage += '\n\n';
+               if (result.emailResult?.emailSent) {
+                  successMessage += '✅ Factura enviada por email\n';
+               } else if (sendEmail) {
+                  successMessage += '❌ Error al enviar email\n';
+               }
+               if (result.pdfResult?.pdfGenerated) {
+                  successMessage += '✅ PDF generado';
+               } else if (generatePDF) {
+                  successMessage += '❌ Error al generar PDF';
+               }
+            }
+         }
 
          Swal.fire('¡Cobro realizado!', 'El pago ha sido procesado correctamente', 'success');
          onPaymentCompleted();
@@ -63,8 +109,8 @@ function PaymentModal({ isOpen, onClose, onPaymentCompleted, selectedOrder }) {
             <div className="payment-method">
                <label>
                   Método de Pago:
-                  <select 
-                     value={paymentMethod} 
+                  <select
+                     value={paymentMethod}
                      onChange={(e) => setPaymentMethod(e.target.value)}
                      required
                   >
@@ -74,6 +120,44 @@ function PaymentModal({ isOpen, onClose, onPaymentCompleted, selectedOrder }) {
                      <option value="TRANSFER">Transferencia</option>
                   </select>
                </label>
+            </div>
+
+            <div className="invoice-options">
+               <h3>Opciones de Factura</h3>
+               <div className="option-checkboxes">
+                  <label className="checkbox-option">
+                     <input
+                        type="checkbox"
+                        checked={sendEmail}
+                        onChange={(e) => setSendEmail(e.target.checked)}
+                        disabled={loading}
+                     />
+                     <span className="checkmark"></span>
+                     <i className="fas fa-envelope"></i>
+                     Enviar factura por email al cliente
+                  </label>
+
+                  <label className="checkbox-option">
+                     <input
+                        type="checkbox"
+                        checked={generatePDF}
+                        onChange={(e) => setGeneratePDF(e.target.checked)}
+                        disabled={loading}
+                     />
+                     <span className="checkmark"></span>
+                     <i className="fas fa-file-pdf"></i>
+                     Generar PDF de la factura
+                  </label>
+               </div>
+
+               {(sendEmail || generatePDF) && (
+                  <div className="invoice-preview">
+                     <p className="preview-text">
+                        <i className="fas fa-info-circle"></i>
+                        La factura incluirá toda la información del cliente, servicio y vehículo.
+                     </p>
+                  </div>
+               )}
             </div>
 
             <div className="modal-actions">

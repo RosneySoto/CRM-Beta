@@ -309,6 +309,67 @@
    background: #6c757d;
 }
 
+/* Acciones de facturas */
+.action-buttons {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+}
+
+.primary-actions {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+}
+
+.invoice-actions {
+   display: flex;
+   gap: 6px;
+   padding-top: 6px;
+   border-top: 1px solid #e9ecef;
+}
+
+.email-btn, .pdf-btn {
+   padding: 4px 8px;
+   border: none;
+   border-radius: 3px;
+   cursor: pointer;
+   font-size: 11px;
+   font-weight: 600;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   gap: 3px;
+   text-transform: uppercase;
+   letter-spacing: 0.3px;
+}
+
+.email-btn {
+   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+   color: white;
+}
+
+.email-btn:hover {
+   background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
+}
+
+.pdf-btn {
+   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+   color: white;
+}
+
+.pdf-btn:hover {
+   background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 3px 6px rgba(231, 76, 60, 0.3);
+}
+
+.email-btn i, .pdf-btn i {
+   font-size: 10px;
+}
+
 /* Estado sin datos */
 .no-data {
    text-align: center;
@@ -368,10 +429,14 @@
    .order-actions {
       flex-direction: column;
    }
-   
-   .edit-btn, .cancel-btn, .charge-btn {
+
+   .edit-btn, .cancel-btn, .charge-btn, .email-btn, .pdf-btn {
       justify-content: center;
       padding: 8px 12px;
+   }
+
+   .primary-actions, .invoice-actions {
+      justify-content: center;
    }
 }
 

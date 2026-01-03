@@ -18,6 +18,7 @@ const controller_1 = require("./controller");
 const auth_1 = require("../../middleware/auth");
 const Roles_1 = require("../../types/Roles");
 const router = express_1.default.Router();
+//Crea un nuevo producto
 router.post('/', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.addProduct)(req.body)
         .then((data) => {
@@ -38,6 +39,41 @@ router.post('/', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Ad
         res.status(500).send('Unexpected Error');
     });
 }));
+router.get('/allProducts', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User
+]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, controller_1.getAllProducts)()
+        .then((data) => {
+        switch (data.status) {
+            case 200:
+                res.status(200).send(data);
+                break;
+            case 404:
+                res.status(data.status).send(data.message);
+                break;
+        }
+    })
+        .catch((e) => {
+        console.log(e);
+        res.status(500).send('Unexpected Error');
+    });
+}));
+//Edita un producto por ID
+router.put('/update', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const idProduct = req.body.id;
+    const productData = req.body;
+    if (!idProduct) {
+        return res.status(404).send('Producto no encontrado');
+    }
+    const result = yield (0, controller_1.updateProduct)(idProduct, productData);
+    if (!result) {
+        return res.status(404).send('Error al buscar y editar el producto');
+    }
+    res.status(200).send({
+        message: 'User updated successfully',
+        data: result.message
+    });
+}));
+// Mostrar un producto por ID
 router.get('/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User
 ]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.findProductById)(req.params.id)
@@ -59,21 +95,7 @@ router.get('/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.
         res.status(500).send('Unexpected Error');
     });
 }));
-router.put('/update', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const idProduct = req.body.id;
-    const productData = req.body;
-    if (!idProduct) {
-        return res.status(404).send('Producto no encontrado');
-    }
-    const result = yield (0, controller_1.updateProduct)(idProduct, productData);
-    if (!result) {
-        return res.status(404).send('Error al buscar y editar el producto');
-    }
-    res.status(200).send({
-        message: 'User updated successfully',
-        data: result.message
-    });
-}));
+//Elimina un producto de manera pasiva pro ID
 router.delete('/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.deleteProduct)(req.params.id)
         .then((data) => {

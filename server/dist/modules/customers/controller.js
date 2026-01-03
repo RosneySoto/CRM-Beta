@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getByName = exports.getAllActive = exports.getAll = exports.deleteCustomerPartial = exports.updateCustomer = exports.addCustomer = void 0;
+exports.getByEmail = exports.getByName = exports.getAllActive = exports.getAll = exports.deleteCustomerPartial = exports.updateCustomer = exports.addCustomer = void 0;
 const store_1 = require("./store");
 const model_1 = __importDefault(require("./model"));
 function addCustomer(data) {
@@ -34,7 +34,7 @@ function addCustomer(data) {
             }
             ;
             //Valida que la patente exista en la base de datos
-            for (const vehicle of data.vehicles) {
+            for (const vehicle of data.vehicles || []) {
                 const existingVehicle = yield model_1.default.findOne({ 'vehicles.patente': vehicle.patente });
                 if (existingVehicle) {
                     return {
@@ -191,4 +191,30 @@ function getByName(name) {
     });
 }
 exports.getByName = getByName;
+;
+function getByEmail(email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.getCustomerByEmail)(email);
+            if (!result) {
+                return {
+                    status: 404,
+                    message: 'User no found'
+                };
+            }
+            ;
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+        ;
+    });
+}
+exports.getByEmail = getByEmail;
 ;

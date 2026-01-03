@@ -106,6 +106,101 @@ function OrderList() {
       fetchOrders();
    };
 
+   const handleSendEmail = async (order) => {
+      const result = await Swal.fire({
+         title: 'Enviar Factura por Email',
+         text: `¿Enviar la factura al cliente ${order.customerId?.name} ${order.customerId?.lastname}?`,
+         icon: 'question',
+         showCancelButton: true,
+         confirmButtonColor: '#3498db',
+         cancelButtonColor: '#95a5a6',
+         confirmButtonText: 'Sí, enviar',
+         cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+         try {
+            const token = Cookies.get("token");
+            if (!token) throw new Error("No token found. Please log in.");
+
+            // Primero necesitamos obtener el ID del pago/factura
+            // Como no tenemos el paymentId directamente, vamos a buscarlo
+            const paymentsResponse = await axios.get("http://localhost:5000/payment/dashboard/sales", {
+               headers: { Authorization: `Bearer ${token}` },
+               withCredentials: true,
+            });
+
+            // Buscar el pago correspondiente a esta orden
+            const payment = paymentsResponse.data.sales.find(p => p.orderId === order._id);
+
+            if (!payment) {
+               Swal.fire('Error', 'No se encontró la factura para esta orden.', 'error');
+               return;
+            }
+
+            await axios.post(
+               `http://localhost:5000/payment/${payment.id}/send-email`,
+               {},
+               {
+                  headers: { Authorization: `Bearer ${token}` },
+                  withCredentials: true,
+               }
+            );
+
+            Swal.fire('¡Enviado!', 'La factura ha sido enviada por email correctamente.', 'success');
+         } catch (error) {
+            console.error("Error sending email:", error);
+            Swal.fire('Error', 'No se pudo enviar el email. Inténtalo nuevamente.', 'error');
+         }
+      }
+   };
+
+   const handleDownloadPDF = async (order) => {
+      try {
+         const token = Cookies.get("token");
+         if (!token) throw new Error("No token found. Please log in.");
+
+         // Primero necesitamos obtener el ID del pago/factura
+         const paymentsResponse = await axios.get("http://localhost:5000/payment/dashboard/sales", {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+         });
+
+         // Buscar el pago correspondiente a esta orden
+         const payment = paymentsResponse.data.sales.find(p => p.orderId === order._id);
+
+         if (!payment) {
+            Swal.fire('Error', 'No se encontró la factura para esta orden.', 'error');
+            return;
+         }
+
+         // Descargar el PDF
+         const response = await axios.get(
+            `http://localhost:5000/payment/${payment.id}/pdf`,
+            {
+               headers: { Authorization: `Bearer ${token}` },
+               withCredentials: true,
+               responseType: 'blob'
+            }
+         );
+
+         // Crear un enlace para descargar el archivo
+         const url = window.URL.createObjectURL(new Blob([response.data]));
+         const link = document.createElement('a');
+         link.href = url;
+         link.setAttribute('download', `Factura_${payment.id}.pdf`);
+         document.body.appendChild(link);
+         link.click();
+         link.remove();
+         window.URL.revokeObjectURL(url);
+
+         Swal.fire('¡Descargado!', 'El PDF ha sido descargado correctamente.', 'success');
+      } catch (error) {
+         console.error("Error downloading PDF:", error);
+         Swal.fire('Error', 'No se pudo descargar el PDF. Inténtalo nuevamente.', 'error');
+      }
+   };
+
    const getFilteredOrders = () => {
       switch (filterStatus) {
          case 'active':
@@ -233,30 +328,52 @@ function OrderList() {
                               </span>
                            </td>
                            <td className="order-actions">
-                              <button 
-                                 className={`edit-btn ${!order.active ? 'disabled' : ''}`}
-                                 onClick={() => order.active && handleEditClick(order)}
-                                 disabled={!order.active}
-                                 title={!order.active ? 'No se puede editar una orden ya cobrada' : 'Editar orden'}
-                              >
-                                 <i className="fas fa-edit"></i> Editar
-                              </button>
-                              <button 
-                                 className={`cancel-btn ${!order.active ? 'disabled' : ''}`}
-                                 onClick={() => order.active && handleDeleteOrder(order._id)}
-                                 disabled={!order.active}
-                                 title={!order.active ? 'No se puede eliminar una orden ya cobrada' : 'Eliminar orden'}
-                              >
-                                 <i className="fas fa-times"></i> Eliminar
-                              </button>
-                              <button 
-                                 className={`charge-btn ${!order.active ? 'disabled' : ''}`}
-                                 onClick={() => order.active && handlePaymentClick(order)}
-                                 disabled={!order.active}
-                                 title={!order.active ? 'Esta orden ya fue cobrada' : 'Cobrar orden'}
-                              >
-                                 <i className="fas fa-dollar-sign"></i> {order.active ? 'Cobrar' : 'Cobrada'}
-                              </button>
+                              <div className="action-buttons">
+                                 <div className="primary-actions">
+                                    <button
+                                       className={`edit-btn ${!order.active ? 'disabled' : ''}`}
+                                       onClick={() => order.active && handleEditClick(order)}
+                                       disabled={!order.active}
+                                       title={!order.active ? 'No se puede editar una orden ya cobrada' : 'Editar orden'}
+                                    >
+                                       <i className="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button
+                                       className={`cancel-btn ${!order.active ? 'disabled' : ''}`}
+                                       onClick={() => order.active && handleDeleteOrder(order._id)}
+                                       disabled={!order.active}
+                                       title={!order.active ? 'No se puede eliminar una orden ya cobrada' : 'Eliminar orden'}
+                                    >
+                                       <i className="fas fa-times"></i> Eliminar
+                                    </button>
+                                    <button
+                                       className={`charge-btn ${!order.active ? 'disabled' : ''}`}
+                                       onClick={() => order.active && handlePaymentClick(order)}
+                                       disabled={!order.active}
+                                       title={!order.active ? 'Esta orden ya fue cobrada' : 'Cobrar orden'}
+                                    >
+                                       <i className="fas fa-dollar-sign"></i> {order.active ? 'Cobrar' : 'Cobrada'}
+                                    </button>
+                                 </div>
+                                 {!order.active && (
+                                    <div className="invoice-actions">
+                                       <button
+                                          className="email-btn"
+                                          onClick={() => handleSendEmail(order)}
+                                          title="Enviar factura por email"
+                                       >
+                                          <i className="fas fa-envelope"></i> Email
+                                       </button>
+                                       <button
+                                          className="pdf-btn"
+                                          onClick={() => handleDownloadPDF(order)}
+                                          title="Descargar PDF"
+                                       >
+                                          <i className="fas fa-file-pdf"></i> PDF
+                                       </button>
+                                    </div>
+                                 )}
+                              </div>
                            </td>
                         </tr>
                      ))

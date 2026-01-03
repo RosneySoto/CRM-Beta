@@ -3,6 +3,8 @@ import controllerError from '../../middleware/controllerError';
 import { authenticate, authorize } from '../../middleware/auth';
 import { UserRole } from "../../types/Roles";
 import { findOrderByIdandCreateBill } from './controller';
+import { sendInvoiceByPaymentId } from '../../utils/email';
+import { generateInvoicePDFByPaymentId } from '../../utils/pdf';
 import Payments from './model';
 import OrderBuy from '../orderBuyWash/model';
 import { CustomRequest } from '../../types/Users'
@@ -11,7 +13,7 @@ const router = express.Router();
 router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
 
    const {id} = req.params;
-   const { paymentMethod } = req.body;
+   const { paymentMethod, sendEmail = false, generatePDF = false } = req.body;
 
    if (!paymentMethod || (paymentMethod !== 'CASH' && paymentMethod !== 'CARD' && paymentMethod !== 'TRANSFER')) {
       return res.status(400).json({
@@ -20,17 +22,28 @@ router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), as
       });
    }
 
-   findOrderByIdandCreateBill(id as string, paymentMethod as string)
+   findOrderByIdandCreateBill(id as string, paymentMethod as string, sendEmail as boolean, generatePDF as boolean)
       .then((data) => {
          switch (data.status) {
             case 200:
-               res.status(200).send(data.message);
+               // Si hay PDF para descargar, enviarlo como archivo
+               if (data.pdfBuffer && data.downloadPdf) {
+                  const invoiceNumber = data.message.invoiceNumber || `Factura_${Date.now()}`;
+                  const fileName = `Factura_${invoiceNumber}.pdf`;
+
+                  res.setHeader('Content-Type', 'application/pdf');
+                  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+                  res.setHeader('Content-Length', data.pdfBuffer.length);
+                  res.send(data.pdfBuffer);
+               } else {
+                  res.status(200).json(data.message);
+               }
                break;
             case 400:
-               res.status(400).send(data.message);
+               res.status(400).json(data.message);
                break;
-               case 420:
-               res.status(420).send(data.message);
+            case 420:
+               res.status(420).json(data.message);
                break;
             default:
                controllerError(data, req, res);
@@ -41,6 +54,83 @@ router.post('/:id', authenticate, authorize([UserRole.Admin, UserRole.User]), as
          console.log(e);
          res.status(500).send('Unexpected Error');
       });
+});
+
+// Endpoint para enviar factura por email
+router.post('/:id/send-email', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
+   const { id } = req.params;
+
+   try {
+      // Verificar que la factura existe
+      const payment = await Payments.findById(id);
+      if (!payment) {
+         return res.status(404).json({
+            status_code: 404,
+            message: 'Factura no encontrada'
+         });
+      }
+
+      // Enviar la factura por email
+      const emailResult = await sendInvoiceByPaymentId(id);
+
+      res.status(emailResult.success ? 200 : 500).json({
+         status_code: emailResult.success ? 200 : 500,
+         message: emailResult.message,
+         success: emailResult.success
+      });
+
+   } catch (error) {
+      console.error('Error en endpoint send-email:', error);
+      res.status(500).json({
+         status_code: 500,
+         message: 'Error interno del servidor',
+         success: false
+      });
+   }
+});
+
+// Endpoint para descargar factura como PDF
+router.get('/:id/pdf', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req: CustomRequest, res: Response, next: NextFunction) => {
+   const { id } = req.params;
+
+   try {
+      // Verificar que la factura existe
+      const payment = await Payments.findById(id);
+      if (!payment) {
+         return res.status(404).json({
+            status_code: 404,
+            message: 'Factura no encontrada'
+         });
+      }
+
+      // Generar PDF
+      const pdfResult = await generateInvoicePDFByPaymentId(id);
+
+      if (!pdfResult.success || !pdfResult.pdf) {
+         return res.status(500).json({
+            status_code: 500,
+            message: pdfResult.message,
+            success: false
+         });
+      }
+
+      // Configurar headers para descarga
+      const fileName = `Factura_${payment.invoiceNumber}.pdf`;
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Content-Length', pdfResult.pdf.length);
+
+      // Enviar el PDF
+      res.send(pdfResult.pdf);
+
+   } catch (error) {
+      console.error('Error en endpoint PDF:', error);
+      res.status(500).json({
+         status_code: 500,
+         message: 'Error interno del servidor',
+         success: false
+      });
+   }
 });
 
 router.get('/dashboard/sales', authenticate, authorize([UserRole.Admin, UserRole.User]), async (req, res) => {

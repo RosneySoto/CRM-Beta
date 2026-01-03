@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllOrders = exports.addOrder = void 0;
+exports.deleteOrderBuyPartial = exports.updateOrder = exports.getOrderById = exports.getAllOrders = exports.addOrder = void 0;
 const store_1 = require("./store");
 function addOrder(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -63,3 +63,77 @@ function getAllOrders() {
     });
 }
 exports.getAllOrders = getAllOrders;
+;
+function getOrderById(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.getOrderById)(id);
+            if (!result) {
+                return {
+                    status: 404,
+                    message: 'Order not found'
+                };
+            }
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+        ;
+    });
+}
+exports.getOrderById = getOrderById;
+;
+function updateOrder(id, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.updateOrder)(id, data);
+            if (!result) {
+                return {
+                    status: 404,
+                    message: 'Order not found'
+                };
+            }
+            return result;
+        }
+        catch (error) {
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+    });
+}
+exports.updateOrder = updateOrder;
+;
+function deleteOrderBuyPartial(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.deleteOrderBuy)(id);
+            if (!result) {
+                return {
+                    status: 404,
+                    message: 'Order buy not found'
+                };
+            }
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+        ;
+    });
+}
+exports.deleteOrderBuyPartial = deleteOrderBuyPartial;
+;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.login = exports.userFindEmail = exports.addUser = void 0;
+exports.logout = exports.deleteUser = exports.updateUser = exports.login = exports.userFindEmail = exports.addUser = void 0;
 const model_1 = __importDefault(require("./model"));
 const bcrypt_1 = require("../../middleware/bcrypt");
 function addUser(data) {
@@ -89,6 +89,7 @@ function login(email, password) {
                 if (checkPass) {
                     const user = {
                         id: userFind._id.toString(),
+                        _id: userFind._id.toString(),
                         name: userFind.name,
                         lastname: userFind.lastname,
                         image: userFind.image || '',
@@ -182,3 +183,23 @@ function deleteUser(id) {
 }
 exports.deleteUser = deleteUser;
 ;
+function logout(res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            res.clearCookie('token');
+            return {
+                status: 200,
+                message: 'Logout successful'
+            };
+        }
+        catch (e) {
+            console.log("[ERROR] -> logout", e);
+            return {
+                status: 400,
+                message: "An error occurred during logout",
+                detail: e,
+            };
+        }
+    });
+}
+exports.logout = logout;

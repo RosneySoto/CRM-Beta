@@ -18,6 +18,16 @@ const controller_1 = require("./controller");
 const auth_1 = require("../../middleware/auth");
 const Roles_1 = require("../../types/Roles");
 const router = express_1.default.Router();
+//Endpoint para conectar el front con el back
+router.get('/view-add', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(200).send('Connected to api');
+    }
+    catch (error) {
+        res.status(400).send('Error =>');
+    }
+}));
+//Crea un nuevo cliente
 router.post('/', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.addCustomer)(req.body)
         .then((data) => {
@@ -38,6 +48,7 @@ router.post('/', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Ad
         res.status(500).send('Unexpected Error');
     });
 }));
+//Edita un cliente por ID
 router.put('/edit/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
@@ -71,6 +82,7 @@ router.put('/edit/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.User
         res.status(500).send('Error al actualizar el cliente');
     });
 }));
+//Elimina de manera pasiva un cliente
 router.delete('/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRole.Admin, Roles_1.UserRole.User]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.deleteCustomerPartial)(req.params.id)
         .then((data) => {
@@ -89,6 +101,7 @@ router.delete('/:id', auth_1.authenticate, (0, auth_1.authorize)([Roles_1.UserRo
         res.status(500).send('Unexpected Error');
     });
 }));
+// Muestra todos los clientes
 router.get('/', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.getAll)()
         .then((data) => {
@@ -106,6 +119,7 @@ router.get('/', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 
         res.status(500).send('Unexpected Error');
     });
 }));
+//Lista todos los clientes activos
 router.get('/all', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     (0, controller_1.getAllActive)()
         .then((data) => {
@@ -123,9 +137,28 @@ router.get('/all', auth_1.authenticate, (req, res, next) => __awaiter(void 0, vo
         res.status(500).send('Unexpected Error');
     });
 }));
+//Endoint para buscar por nombre de 
 router.get('/name', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     (0, controller_1.getByName)(req.body.name)
+        .then((data) => {
+        switch (data.status) {
+            case 200:
+                res.status(200).send(data.message);
+                break;
+            case 400:
+                res.status(data.status).send(data.message);
+                break;
+        }
+    })
+        .catch((e) => {
+        console.log(e);
+        res.status(500).send('Unexpected Error');
+    });
+}));
+router.get('/search/email', auth_1.authenticate, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
+    (0, controller_1.getByEmail)(req.body.email)
         .then((data) => {
         switch (data.status) {
             case 200:

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserPartial = exports.updateUser = exports.loginUser = exports.addUser = void 0;
+exports.logoutUser = exports.deleteUserPartial = exports.updateUser = exports.loginUser = exports.addUser = void 0;
 const store_1 = require("./store");
 const bcrypt_1 = require("../../middleware/bcrypt");
 const model_1 = __importDefault(require("./model"));
@@ -143,3 +143,20 @@ function deleteUserPartial(id) {
 }
 exports.deleteUserPartial = deleteUserPartial;
 ;
+function logoutUser(res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const result = yield (0, store_1.logout)(res);
+            return result;
+        }
+        catch (error) {
+            console.log(error);
+            return {
+                status: 500,
+                message: 'Unexpected Controller Error',
+                detail: error
+            };
+        }
+    });
+}
+exports.logoutUser = logoutUser;
